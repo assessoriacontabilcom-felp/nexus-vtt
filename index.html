@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assimilação RPG — Diário de Campo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;600;700&family=Lora:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="badge-live" id="connIndicator" title="Modo Local"></span>
+      <h1>SITE <span class="thin">test</span></h1>
+    </div>
+
+    <div class="system-switcher">
+      <label for="systemSelect" class="sr-only">Sistema</label>
+      <select id="systemSelect">
+        <option value="assimilacao" selected>Assimilação RPG</option>
+        <option value="ordem" disabled>Ordem Paranormal (Em breve)</option>
+        <option value="cthulhu" disabled>Call of Cthulhu 7e (Em breve)</option>
+        <option value="sacramento" disabled>Sacramento (Em breve)</option>
+      </select>
+    </div>
+
+    <div class="room-controls">
+      <input type="text" id="roomCode" placeholder="Código da sala" value="mesa-01" maxlength="20" />
+      <button id="btnJoinRoom" class="btn btn-primary">Conectar Sala</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section id="systemViewport" class="system-viewport"></section>
+
+    <aside class="table-feed">
+      <div class="card-header">
+        <h2>Registro da Mesa</h2>
+        <button id="btnClearFeed" class="btn btn-ghost btn-sm" title="Limpar histórico">Limpar</button>
+      </div>
+      <div class="feed-meta" id="roomStatusText">Modo Local</div>
+      <ul id="rollFeed" class="roll-feed"></ul>
+    </aside>
+  </main>
+  <!-- Motor Principal -->
+  <script type="module" src="./js/core.js"></script>
+
+</body>
+</html>

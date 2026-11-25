@@ -1,0 +1,345 @@
+[
+  {
+    "name": "Agricultor",
+    "cost": 1,
+    "req": "Geografia 1+",
+    "desc": "Em todas as jogadas oriundas de questões agrárias ou biológicas acerca da vida vegetal cultivada pelo ser humano (grãos, frutos, vegetais, mudas ou pragas agrícolas), ganha +1 Sucesso (Joaninha).",
+    "effect": { "when": "skill:Biologia", "type": "addA", "value": 1, "label": "+1 Joaninha (Agrária/Biologia)" }
+  },
+  {
+    "name": "Cavaleiro",
+    "cost": 1,
+    "req": "Nenhum",
+    "desc": "Todos os testes para conduzir animais de montaria podem transformar uma Adaptação (Cervo) em Sucesso (Joaninha) no resultado.",
+    "effect": { "when": "always", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Montaria)" }
+  },
+  {
+    "name": "Estágio Avançado",
+    "cost": 1,
+    "req": "Apenas na criação (aprovação do Assimilador)",
+    "desc": "Aumenta em 1 o Nível de Assimilação inicial, reduzindo em 1 o Nível de Determinação e realizando o Teste de Assimilação.",
+    "effect": null
+  },
+  {
+    "name": "Investigador da Assimilação",
+    "cost": 1,
+    "req": "Biologia 1+",
+    "desc": "Em todo teste relacionado ao entendimento sobre o funcionamento da Assimilação, pode transformar uma Adaptação (Cervo) em Sucesso (Joaninha).",
+    "effect": { "when": "skill:Biologia", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Assimilação)" }
+  },
+  {
+    "name": "Pegada Forte",
+    "cost": 1,
+    "req": "Potência 2+",
+    "desc": "Todos os testes envolvendo firmeza para se segurar em algo ou não deixar pessoa/objeto escapar permitem transformar uma Adaptação (Cervo) em Sucesso (Joaninha).",
+    "effect": { "when": "ins:Potência", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Firmeza)" }
+  },
+  {
+    "name": "Piloto",
+    "cost": 1,
+    "req": "Nenhum",
+    "desc": "Todos os testes para condução de veículos permitem transformar uma Adaptação (Cervo) em Sucesso (Joaninha) no resultado.",
+    "effect": { "when": "always", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Veículos)" }
+  },
+  {
+    "name": "Punhos de Ferro",
+    "cost": 1,
+    "req": "Potência 2+ e Resolução 2+",
+    "desc": "Quando usar 1 Ponto de Determinação para manter dado adicional em combate desarmado, pode transformar uma Adaptação (Cervo) em Sucesso (Joaninha).",
+    "effect": { "when": "ins:Potência", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Desarmado c/ Empenho)" }
+  },
+  {
+    "name": "Saque Rápido",
+    "cost": 1,
+    "req": "Reação 2+",
+    "desc": "O(a) Infectado(a) não gasta Adaptação (Cervo) para sacar ou guardar um Equipamento, mesmo quando em Conflito.",
+    "effect": null
+  },
+  {
+    "name": "Sono Leve",
+    "cost": 1,
+    "req": "Nenhum",
+    "desc": "Permite fazer um teste de Percepção para não ser surpreendido(a) quando está dormindo.",
+    "effect": null
+  },
+  {
+    "name": "Trato com Animais",
+    "cost": 1,
+    "req": "Influência 2+",
+    "desc": "Sempre que fizer jogada para influenciar amistosamente o comportamento de animais, pode transformar uma Adaptação (Cervo) em Sucesso (Joaninha).",
+    "effect": { "when": "ins:Influência", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Animais)" }
+  },
+  {
+    "name": "Viajado",
+    "cost": 1,
+    "req": "Nenhum",
+    "desc": "Todas as jogadas que envolvem o contato com outras culturas e outros povos permitem anular uma Pressão (Coruja) no resultado.",
+    "effect": { "when": "always", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja (Outras culturas)" }
+  },
+  {
+    "name": "Antecedente Marcante",
+    "cost": 2,
+    "req": "Nenhum",
+    "desc": "Quando ativar o seu Evento Marcante, adiciona +1 dado na rolagem sem alterar a quantidade de dados mantidos.",
+    "effect": { "when": "always", "type": "extraDie", "value": 1, "label": "+1 dado (c/ Evento Marcante)" }
+  },
+  {
+    "name": "Aparência Inofensiva",
+    "cost": 2,
+    "req": "Influência 2+",
+    "desc": "Em Conflito, pode gastar Sucessos ou Adaptações para aumentar em +1 Pressão/Adaptação o custo das ativações de Ameaças contra si no próximo turno.",
+    "effect": null
+  },
+  {
+    "name": "Artes Marciais",
+    "cost": 2,
+    "req": "Atletismo 2+ e Reação 2+",
+    "desc": "Todo teste que envolva diretamente práticas de artes marciais (aplicando golpes ou se defendendo) permite remover uma Pressão (Coruja) do resultado.",
+    "effect": { "when": "skill:Atletismo", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja (Artes Marciais)" }
+  },
+  {
+    "name": "Atenção Redobrada",
+    "cost": 2,
+    "req": "Percepção 2+",
+    "desc": "Ao reagir a perigo súbito (emboscada, armadilha, queda), pode transformar Adaptações (Cervo) em Sucessos (Joaninha) até o valor de Reação.",
+    "effect": { "when": "ins:Reação", "type": "bToA", "value": 1, "label": "Cervos → Joaninhas (Perigo súbito)" }
+  },
+  {
+    "name": "Atirador Astuto",
+    "cost": 2,
+    "req": "Furtividade 2+",
+    "desc": "Em ataques de pontaria protegido por cobertura onde consiga se esconder, pode transformar uma Adaptação (Cervo) em Sucesso (Joaninha).",
+    "effect": { "when": "skill:Armas", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Cobertura)" }
+  },
+  {
+    "name": "Batedor",
+    "cost": 2,
+    "req": "Geografia 2+",
+    "desc": "Explora a Região na metade do tempo e encontra um marco geográfico arbitrado pelo Assimilador ao ter êxito em Geografia ou Sobrevivência.",
+    "effect": null
+  },
+  {
+    "name": "Disciplinado",
+    "cost": 2,
+    "req": "Nenhum",
+    "desc": "Fora de Conflito e sem perturbação externa, pode ignorar uma Pressão (Coruja) no resultado se fizer a ação com calma levando o dobro do tempo.",
+    "effect": { "when": "always", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja (Dobro do tempo)" }
+  },
+  {
+    "name": "Dissimulado",
+    "cost": 2,
+    "req": "Influência 2+ e Expressão ou Furtividade 1+",
+    "desc": "Facilidade para se passar por residente de outro Refúgio tendo acesso ao vestuário local, testando Influência + Expressão ou Furtividade.",
+    "effect": null
+  },
+  {
+    "name": "Escaldado",
+    "cost": 2,
+    "req": "Sagacidade 2+",
+    "desc": "Quando realiza testes de Percepção para perceber segundas intenções, pode transformar uma Adaptação (Cervo) em Sucesso (Joaninha) por teste.",
+    "effect": { "when": "ins:Percepção", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Segundas intenções)" }
+  },
+  {
+    "name": "Frugal",
+    "cost": 2,
+    "req": "Nenhum",
+    "desc": "Necessita de menos água e alimento que o normal, podendo ficar o dobro do tempo sem consumir antes de sofrer penalidades.",
+    "effect": null
+  },
+  {
+    "name": "Intimidador",
+    "cost": 2,
+    "req": "Nenhum",
+    "desc": "Em testes para intimidar alguém, pode gastar 1 Ponto de Determinação para substituir os dados de Expressão pelo valor de um Instinto aprovado.",
+    "effect": null
+  },
+  {
+    "name": "Mãos-Leves",
+    "cost": 2,
+    "req": "Reação 2+ e Furtividade 2+",
+    "desc": "Sempre que fizer jogada para roubar ou ocultar objetos à vista das pessoas, adiciona uma Adaptação (Cervo) ao resultado.",
+    "effect": { "when": "skill:Furtividade", "type": "addB", "value": 1, "label": "+1 Cervo (Roubar/Ocultar)" }
+  },
+  {
+    "name": "Memória Afiada",
+    "cost": 2,
+    "req": "Sagacidade 2+",
+    "desc": "Todos os testes que tenham relação com a lembrança de alguma informação garantem +1 Sucesso (Joaninha) em seus resultados.",
+    "effect": { "when": "ins:Sagacidade", "type": "addA", "value": 1, "label": "+1 Joaninha (Memória)" }
+  },
+  {
+    "name": "Presença Encantadora",
+    "cost": 2,
+    "req": "Influência 3+",
+    "desc": "Pode gastar 1 Ponto de Determinação antes de rolar os dados para anular todas as Pressões (Coruja) do resultado em interações sociais.",
+    "effect": { "when": "ins:Influência", "type": "ignoreC", "value": 9, "label": "Anula Corujas (Social c/ 1 Det)" }
+  },
+  {
+    "name": "Relíquia",
+    "cost": 2,
+    "req": "Nenhum",
+    "desc": "Seu Artefato inicial não é limitado pelo teto de Escassez e pode ser consertado mesmo se Quebrado (perde 1 Determinação se perdê-lo).",
+    "effect": null
+  },
+  {
+    "name": "Sacrifício Heroico",
+    "cost": 2,
+    "req": "Nenhum",
+    "desc": "Permite sofrer todo o dano no lugar de um aliado próximo, uma vez por sessão de jogo.",
+    "effect": null
+  },
+  {
+    "name": "Sentido Aguçado",
+    "cost": 2,
+    "req": "Percepção 2+",
+    "desc": "Escolha um sentido (visão, audição, tato, paladar ou olfato); todo teste de Percepção para identificar algo com esse sentido adiciona +1 Sucesso (Joaninha).",
+    "effect": { "when": "ins:Percepção", "type": "addA", "value": 1, "label": "+1 Joaninha (Sentido escolhido)" }
+  },
+  {
+    "name": "Companheiro Animal",
+    "cost": 3,
+    "req": "Sobrevivência 1+",
+    "desc": "Acompanhado por um animal de pequeno/médio porte. Quando seu animal ajuda a realizar uma ação, adiciona uma Adaptação (Cervo) ao resultado.",
+    "effect": { "when": "always", "type": "addB", "value": 1, "label": "+1 Cervo (Ajuda do animal)" }
+  },
+  {
+    "name": "Construtor",
+    "cost": 3,
+    "req": "Engenharia 3+",
+    "desc": "Realiza Construções no Refúgio de forma eficiente sem necessidade de testes semanais de Engenharia para gerar pontos de obra.",
+    "effect": null
+  },
+  {
+    "name": "Contra-Ataque",
+    "cost": 3,
+    "req": "Reação 2+",
+    "desc": "Após sofrer um ataque em Conflito, o próximo teste para Neutralizar aquela Ameaça adiciona +1 Sucesso (Joaninha) ao resultado.",
+    "effect": { "when": "always", "type": "addA", "value": 1, "label": "+1 Joaninha (Contra-ataque)" }
+  },
+  {
+    "name": "Corpo Grande",
+    "cost": 3,
+    "req": "Atletismo 2+",
+    "desc": "Todos os testes de Resolução relacionados com resistência física podem ser realizados com Potência (não afeta testes mentais/emocionais).",
+    "effect": null
+  },
+  {
+    "name": "Determinação Inabalável",
+    "cost": 3,
+    "req": "Resolução 3+",
+    "desc": "Todos os testes relacionados aos Propósitos do(a) Infectado(a) permitem transformar uma Adaptação (Cervo) em Sucesso (Joaninha).",
+    "effect": { "when": "always", "type": "bToA", "value": 1, "label": "1 Cervo → 1 Joaninha (Propósito)" }
+  },
+  {
+    "name": "Esquiva Precisa",
+    "cost": 3,
+    "req": "Reação 2+",
+    "desc": "Pode investir Adaptações (Cervo) do resultado de sua Ação para impor a mesma quantidade de Pressão em ataques contra si até o fim do Conflito.",
+    "effect": null
+  },
+  {
+    "name": "Gambiarra",
+    "cost": 3,
+    "req": "Sagacidade 2+",
+    "desc": "Pode mudar Características de Artefatos, o que não é possível fazer sem esta Característica.",
+    "effect": null
+  },
+  {
+    "name": "Inabalável",
+    "cost": 3,
+    "req": "Resolução 3+",
+    "desc": "Em testes de resistência mental/emocional, pode transformar Pressões (Coruja) em Adaptações (Cervo) até o valor de Resolução por sessão.",
+    "effect": { "when": "ins:Resolução", "type": "cToB", "value": 1, "label": "Corujas → Cervos (Resistência mental)" }
+  },
+  {
+    "name": "Olhar Minucioso",
+    "cost": 3,
+    "req": "Percepção 2+",
+    "desc": "Todas as jogadas de Percepção ou Sagacidade para encontrar algo escondido ou oculto adicionam +1 Sucesso (Joaninha) para investigar.",
+    "effect": { "when": "ins:Percepção", "type": "addA", "value": 1, "label": "+1 Joaninha (Investigar oculto)" }
+  },
+  {
+    "name": "Orientação",
+    "cost": 3,
+    "req": "Geografia ou Sobrevivência 2+",
+    "desc": "Todo teste de Geografia ou Sobrevivência para recuperar um rastro ou ter ciência da sua localização adiciona +1 Adaptação (Cervo).",
+    "effect": { "when": "skill:Sobrevivência", "type": "addB", "value": 1, "label": "+1 Cervo (Orientação/Rastro)" }
+  },
+  {
+    "name": "Parkour",
+    "cost": 3,
+    "req": "Reação 2+",
+    "desc": "Sempre que realizar testes de escalada, equilíbrio, saltos, corridas curtas, acrobacias ou passar por lugares apertados, adiciona +1 Adaptação (Cervo).",
+    "effect": { "when": "skill:Atletismo", "type": "addB", "value": 1, "label": "+1 Cervo (Parkour/Acrobacia)" }
+  },
+  {
+    "name": "Primeiros Socorros",
+    "cost": 3,
+    "req": "Medicina 2+",
+    "desc": "Sempre que realizar jogadas para auxiliar nos cuidados de ferimentos e doenças, adiciona +1 Sucesso (Joaninha) em seu resultado.",
+    "effect": { "when": "skill:Medicina", "type": "addA", "value": 1, "label": "+1 Joaninha (Medicina)" }
+  },
+  {
+    "name": "Racional",
+    "cost": 3,
+    "req": "Erudição 2+",
+    "desc": "Todos os testes de Resolução relacionados com resistência mental podem ser realizados com Sagacidade (não afeta testes físicos).",
+    "effect": null
+  },
+  {
+    "name": "Recuperação Rápida",
+    "cost": 3,
+    "req": "Resolução 2+",
+    "desc": "Toda vez que ativa a Recuperação, sua Saúde regenera +2 pontos adicionais.",
+    "effect": null
+  },
+  {
+    "name": "Resiliente",
+    "cost": 3,
+    "req": "Assimilação 2+",
+    "desc": "Uma vez por Conflito, ao sofrer dano, pode gastar Pontos de Assimilação para reduzir o dano sofrido proporcionalmente aos pontos gastos.",
+    "effect": null
+  },
+  {
+    "name": "Vaso Ruim",
+    "cost": 3,
+    "req": "Resolução 2+",
+    "desc": "Anula uma primeira ativação que levaria à sua morte (recarrega apenas após cumprir uma Clareza de Propósito).",
+    "effect": null
+  },
+  {
+    "name": "Herói Local",
+    "cost": 4,
+    "req": "Influência 3+",
+    "desc": "Uma vez por arco de história, pode gastar seu uso de Evento Marcante para evitar que o Refúgio perca 1 nível de Moral.",
+    "effect": null
+  },
+  {
+    "name": "MacGyver",
+    "cost": 4,
+    "req": "Sagacidade 2+ e Manufaturas 2+",
+    "desc": "Uma vez por sessão, constrói um Artefato Improvisado com uma característica de categoria 1 usando sucata ao redor (dura até o fim da cena).",
+    "effect": null
+  },
+  {
+    "name": "Suporte",
+    "cost": 4,
+    "req": "Influência 2+ e Reação 2+",
+    "desc": "Sempre que usar a ação Ajudar Aliado para transferir Sucessos a outros Infectados, adiciona +1 Sucesso (Joaninha) extra.",
+    "effect": null
+  },
+  {
+    "name": "Mira Fatal",
+    "cost": 5,
+    "req": "Armas 3+ e Percepção ou Reação 3+",
+    "desc": "Em ataques de pontaria, pode gastar 2 Pontos de Determinação para dobrar os Sucessos (Joaninha) investidos em Neutralização de Ameaça.",
+    "effect": null
+  },
+  {
+    "name": "Motivar Aliado",
+    "cost": 5,
+    "req": "Expressão 3+",
+    "desc": "Ao usar Apoiar Aliado, cada Adaptação (Cervo) anula 2 Pressões (Coruja) do aliado alvo (até o valor de Influência por sessão).",
+    "effect": null
+  }
+]
