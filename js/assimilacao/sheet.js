@@ -59,9 +59,9 @@ export const AssimilacaoModule = {
       if (savedTraits) this.customTraits = JSON.parse(savedTraits);
 
       const [traitsRes, itemsRes, assimRes] = await Promise.all([
-        fetch('./data/caracteristicas.json'),
-        fetch('./data/itens.json'),
-        fetch('./data/assimilacoes.json')
+        fetch('./data/caracteristicas.json', { cache: 'no-store' }),
+        fetch('./data/itens.json', { cache: 'no-store' }),
+        fetch('./data/assimilacoes.json', { cache: 'no-store' })
       ]);
 
       if (!traitsRes.ok) throw new Error(`Falha ao carregar caracteristicas.json (${traitsRes.status})`);
@@ -149,7 +149,7 @@ export const AssimilacaoModule = {
       this.refreshApplicableTraits();
     });
 
-    ['#rollIns1', '#rollIns2', '#rollSkill'].forEach(selector => {
+    ['#rollIns1', '#rollIns2', '#rollSkill', '#rollOrigem', '#chkEmpenho'].forEach(selector => {
       container.querySelector(selector)?.addEventListener('change', () => this.refreshApplicableTraits());
     });
 
@@ -267,6 +267,7 @@ export const AssimilacaoModule = {
       char.occupationUsed = false;
       this.saveState();
       this.refreshOriginSelect();
+      this.refreshApplicableTraits();
     });
 
     const detCircle = host.querySelector('#btnSpendDet');
@@ -584,6 +585,7 @@ export const AssimilacaoModule = {
       textarea.addEventListener('input', () => {
         char.traits[Number(textarea.dataset.tidx)].desc = textarea.value;
         this.saveState();
+        this.refreshApplicableTraits();
       });
     });
 
@@ -636,6 +638,9 @@ export const AssimilacaoModule = {
   getApplicableTraits() {
     const primaryInstinct = SYSTEM_DATA.instincts[Number(document.getElementById('rollIns1')?.value || 0)];
     const isInstinctAction = document.getElementById('chkInstinto')?.checked;
+    const useEffort = document.getElementById('chkEmpenho')?.checked;
+    const selectedOrigin = document.getElementById('rollOrigem')?.value || '';
+
     const secondaryInstinct = isInstinctAction
       ? SYSTEM_DATA.instincts[Number(document.getElementById('rollIns2')?.value || 0)]
       : null;
@@ -650,12 +655,94 @@ export const AssimilacaoModule = {
         : SYSTEM_DATA.practices[Number(idx)];
     }
 
-    const matchesCondition = (when) =>
-      when === 'always' ||
-      when === `ins:${primaryInstinct}` ||
-      (secondaryInstinct && when === `ins:${secondaryInstinct}`) ||
-      (selectedSkill && when === `skill:${selectedSkill}`) ||
-      (skillGroup && when === `group:${skillGroup}`);
+    const matchesCondition = (when, textHint = '') => {
+      const hint = textHint.toLowerCase();
+
+      if (when === 'origin:evento' || hint.includes('evento marcante')) {
+        if (selectedOrigin !== 'evento') return false;
+      }
+      if (when === 'origin:ocupacao' || hint.includes('ocupação')) {
+        if (selectedOrigin !== 'ocupacao') return false;
+      }
+      if (when === 'effort' && !useEffort) return false;
+      if (when === 'instinctAction' && !isInstinctAction) return false;
+
+      if (['origin:evento', 'origin:ocupacao', 'effort', 'instinctAction'].includes(when)) {
+        return true;
+      }
+
+      return (
+        when === 'always' ||
+        when === `ins:${primaryInstinct}` ||
+        (secondaryInstinct && when === `ins:${secondaryInstinct}`) ||
+        (selectedSkill && when === `skill:${selectedSkill}`) ||
+        (skillGroup && when === `group:${skillGroup}`)
+      );
+    };
+
+    // Infere efeito automático caso a característica ainda não tenha um objeto `effect` no catálogo
+    const inferTraitEffect = (descText) => {
+      const lower = String(descText || '').toLowerCase();
+      if (!lower) return null;
+
+      const matchedInstinct = SYSTEM_DATA.instincts.find(i => lower.includes(i.toLowerCase()));
+      const matchedSkill = [...SYSTEM_DATA.knowledges, ...SYSTEM_DATA.practices].find(s => lower.includes(s.toLowerCase()));
+      const isCombatRangedOrMelee = lower.includes('pontaria') || lower.includes('distância') || lower.includes('corpo a corpo');
+
+      const when = matchedSkill
+        ? `skill:${matchedSkill}`
+        : isCombatRangedOrMelee
+          ? 'skill:Armas'
+          : matchedInstinct
+            ? `ins:${matchedInstinct}`
+            : 'always';
+
+      const dpMatch = lower.match(/gastar?\s*(\d+)\s*(?:pontos?\s*de\s*)?determina[çc][ãa]o/);
+      const apMatch = lower.match(/gastar?\s*(\d+)\s*(?:pontos?\s*de\s*)?assimila[çc][ãa]o/);
+      const costDp = dpMatch ? Number(dpMatch[1]) : 0;
+      const costAp = apMatch ? Number(apMatch[1]) : 0;
+      const isOptional = Boolean(
+        costDp ||
+        costAp ||
+        lower.includes('pode ') ||
+        lower.includes('quando ') ||
+        lower.includes('em ataques') ||
+        lower.includes('contra ')
+      );
+
+      const costTag = costDp ? ` (-${costDp} Det.)` : costAp ? ` (-${costAp} Assim.)` : '';
+
+      if (/dobrar?\s*(?:os\s*)?(?:sucessos|joaninha)/.test(lower)) {
+        return { when, type: 'doubleA', optional: isOptional, costDp, costAp, label: `Dobra Joaninhas${costTag}` };
+      }
+      if (/substitui|converte/.test(lower) && /cervos?\s*por\s*joaninha/.test(lower)) {
+        const count = /qualquer|todos/.test(lower) ? 99 : 1;
+        return { when, type: 'bToA', value: count, optional: isOptional, costDp, costAp, label: `${count === 99 ? 'Cervos' : '1 Cervo'} → Joaninha${costTag}` };
+      }
+      const addAMatch = lower.match(/\+(\d+)\s*(?:sucessos?|joaninha)/);
+      if (addAMatch) {
+        const val = Number(addAMatch[1]);
+        return { when, type: 'addA', value: val, optional: isOptional, costDp, costAp, label: `+${val} Joaninha(s)${costTag}` };
+      }
+      const addBMatch = lower.match(/\+(\d+)\s*(?:adapta[çc][ãa]o|adapta[çc][õo]es|cervo)/);
+      if (addBMatch) {
+        const val = Number(addBMatch[1]);
+        return { when, type: 'addB', value: val, optional: isOptional, costDp, costAp, label: `+${val} Cervo(s)${costTag}` };
+      }
+      const ignoreCMatch = lower.match(/(?:anula|ignora|remove)\s*(\d+)\s*(?:press[ãa]o|coruja)/);
+      if (ignoreCMatch) {
+        const val = Number(ignoreCMatch[1]);
+        return { when, type: 'ignoreC', value: val, optional: isOptional, costDp, costAp, label: `Anula ${val} Coruja(s)${costTag}` };
+      }
+      if (/mant[eé]m\s*\+?1\s*dado/.test(lower)) {
+        return { when, type: 'extraKeep', value: 1, optional: isOptional, costDp, costAp, label: `Mantém +1 dado${costTag}` };
+      }
+      if (/\+1\s*dado|\b1\s*dado\s*(?:extra|adicional)/.test(lower)) {
+        return { when, type: 'extraDie', value: 1, optional: isOptional, costDp, costAp, label: `+1 dado${costTag}` };
+      }
+
+      return null;
+    };
 
     const catalog = this.getAllTraits();
     const traitBonuses = this.state.traits
@@ -665,20 +752,32 @@ export const AssimilacaoModule = {
           ? slot
           : catalog.find(trait => trait.name.toLowerCase() === slot.name.trim().toLowerCase());
 
-        if (!matched?.effect || !matchesCondition(matched.effect.when)) return null;
+        const resolvedEffect = matched?.effect || inferTraitEffect(slot.desc || matched?.desc);
+        const textHint = `${resolvedEffect?.label || ''} ${slot.desc || ''}`;
+        if (!resolvedEffect || !matchesCondition(resolvedEffect.when, textHint)) return null;
+
         return {
           slotIdx: `trait-${slotIdx}`,
           source: 'trait',
           name: slot.name,
-          optional: Boolean(matched.effect.optional),
-          effect: matched.effect
+          optional: Boolean(resolvedEffect.optional),
+          effect: resolvedEffect
         };
       })
       .filter(Boolean);
 
     const skippedTypes = new Set(['aptitudeMod', 'aptitudeZero', 'healthMod', 'activeAction', 'freeInstinctAction', 'freeAssimilation', 'reroll']);
-    const mutationBonuses = getEquippedMutations(this.state, this.catalogs.assimilacoes).flatMap(mut =>
-      mut.effects
+    const mutationBonuses = getEquippedMutations(this.state, this.catalogs.assimilacoes).flatMap(mut => {
+      if (mut.locked) {
+        return [{
+          slotIdx: `${mut.id}-locked`,
+          source: 'assimilation',
+          name: mut.name,
+          locked: true,
+          effect: { label: `Requer Assimilação ${mut.minAssimilation}+` }
+        }];
+      }
+      return mut.effects
         .filter(eff => !skippedTypes.has(eff.type) && matchesCondition(eff.when))
         .map((eff, effIdx) => ({
           slotIdx: `${mut.id}-${effIdx}`,
@@ -686,8 +785,8 @@ export const AssimilacaoModule = {
           name: mut.name,
           optional: Boolean(eff.optional),
           effect: eff
-        }))
-    );
+        }));
+    });
 
     return [...traitBonuses, ...mutationBonuses];
   },
@@ -704,12 +803,13 @@ export const AssimilacaoModule = {
 
     const pills = applicable.map(item => {
       const isMutation = item.source === 'assimilation';
-      const bg = isMutation ? '#dce8ec' : '#ede6d6';
-      const border = isMutation ? 'var(--col-ass)' : 'var(--col-instinto)';
-      const checkedAttr = item.optional ? '' : 'checked';
+      const bg = item.locked ? '#e5e5e5' : isMutation ? '#dce8ec' : '#ede6d6';
+      const border = item.locked ? '#999' : isMutation ? 'var(--col-ass)' : 'var(--col-instinto)';
+      const checkedAttr = item.optional || item.locked ? '' : 'checked';
+      const disabledAttr = item.locked ? 'disabled' : '';
       return `
-        <label style="display:inline-flex; align-items:center; gap:5px; background:${bg}; border:1px solid ${border}; padding:2px 8px; border-radius:99px; font-size:0.8rem; cursor:pointer;">
-          <input type="checkbox" class="chk-trait-bonus" data-slot="${item.slotIdx}" ${checkedAttr} />
+        <label style="display:inline-flex; align-items:center; gap:5px; background:${bg}; border:1px solid ${border}; padding:2px 8px; border-radius:99px; font-size:0.8rem; opacity:${item.locked ? '0.65' : '1'}; cursor:${item.locked ? 'not-allowed' : 'pointer'};">
+          <input type="checkbox" class="chk-trait-bonus" data-slot="${item.slotIdx}" ${checkedAttr} ${disabledAttr} />
           <strong>${item.name}</strong> <span class="muted">(${item.effect.label})</span>
         </label>
       `;
@@ -772,7 +872,7 @@ export const AssimilacaoModule = {
     let keepCount = 1;
     let testLabel = '';
 
-    // 1. Calcula custo de pontos das mutações ativadas no rolador
+    // 1. Calcula custo de pontos das características/mutações ativadas no rolador
     let extraApCost = healthStatus.extraAssimilationCost;
     let extraDpCost = 0;
     activeTraits.forEach(({ effect }) => {
@@ -926,10 +1026,10 @@ export const AssimilacaoModule = {
     this.saveState();
     this.refreshFrontUI();
     this.refreshOriginSelect();
+    this.refreshApplicableTraits();
     this.renderPendingDice();
   },
 
-  // Rerrolagem via Pulso Sombrio (Furtividade) ou Pulso Mental (Conhecimentos)
   rerollPendingDice() {
     if (!this.pendingRoll || this.pendingRoll.rerolled) return;
     const char = this.state;
