@@ -117,6 +117,7 @@ export const AssimilacaoModule = {
         <div class="roller-controls">
           <button id="btnRoll" class="btn btn-primary">Rolar Dados</button>
           <button id="btnReroll" class="btn btn-ghost" style="display:none;">Rerrolar (-1 Assim.)</button>
+          <button id="btnCancelRoll" class="btn btn-danger" style="display:none;">Cancelar & Reembolsar</button>
           <span id="rollNote" class="muted" style="color:var(--col-det); font-weight:600;"></span>
         </div>
         <div id="diceTray" class="dice-tray"></div>
@@ -155,6 +156,7 @@ export const AssimilacaoModule = {
 
     container.querySelector('#btnRoll').addEventListener('click', () => this.executeRoll());
     container.querySelector('#btnReroll').addEventListener('click', () => this.rerollPendingDice());
+    container.querySelector('#btnCancelRoll').addEventListener('click', () => this.cancelPendingRoll());
     container.querySelector('#btnConfirmRoll').addEventListener('click', () => this.confirmRoll());
 
     container.querySelectorAll('.tab-btn').forEach(button => {
@@ -985,10 +987,12 @@ export const AssimilacaoModule = {
 
     if (selectedOrigin === 'evento') {
       char.eventUsed = true;
+      spentResources.origin = 'evento';
       keepCount += 1;
       testLabel += ' • Evento';
     } else if (selectedOrigin === 'ocupacao') {
       char.occupationUsed = true;
+      spentResources.origin = 'ocupacao';
       keepCount += 1;
       testLabel += ' • Ocupação';
     }
@@ -1017,6 +1021,8 @@ export const AssimilacaoModule = {
       if (!dicePool.length) {
         char.assimilationPoints += spentResources.assimilation;
         char.determinationPoints += spentResources.determination;
+        if (spentResources.origin === 'evento') char.eventUsed = false;
+        if (spentResources.origin === 'ocupacao') char.occupationUsed = false;
         noteEl.textContent = 'Sem dados restantes após penalidade de Saúde.';
         return;
       }
@@ -1042,6 +1048,7 @@ export const AssimilacaoModule = {
       keepCount: Math.min(keepCount, rolledDice.length),
       selected: new Set(bestIndices.slice(0, keepCount)),
       modifiers,
+      spentResources,
       rerolled: false
     };
 
@@ -1065,6 +1072,7 @@ export const AssimilacaoModule = {
     }
 
     char.assimilationPoints -= cost;
+    this.pendingRoll.spentResources.assimilation += cost;
     this.pendingRoll.rerolled = true;
     this.pendingRoll.label += ' • Rerrolado';
     this.pendingRoll.dice = this.pendingRoll.dice.map(die => ({
@@ -1075,6 +1083,28 @@ export const AssimilacaoModule = {
     this.saveState();
     this.refreshFrontUI();
     this.renderPendingDice();
+  },
+
+  cancelPendingRoll() {
+    if (!this.pendingRoll) return;
+    const char = this.state;
+    const spent = this.pendingRoll.spentResources || { assimilation: 0, determination: 0, origin: '' };
+
+    char.assimilationPoints = Math.min(10, char.assimilationPoints + (spent.assimilation || 0));
+    char.determinationPoints = Math.min(10, char.determinationPoints + (spent.determination || 0));
+
+    if (spent.origin === 'evento') char.eventUsed = false;
+    if (spent.origin === 'ocupacao') char.occupationUsed = false;
+
+    this.pendingRoll = null;
+    this.saveState();
+    this.refreshFrontUI();
+    this.refreshOriginSelect();
+    this.refreshApplicableTraits();
+    this.renderPendingDice();
+
+    const noteEl = document.getElementById('rollNote');
+    if (noteEl) noteEl.textContent = 'Rolagem cancelada e pontos reembolsados.';
   },
 
   canRerollCurrentTest() {
@@ -1097,6 +1127,7 @@ export const AssimilacaoModule = {
     const confirmBtn = document.getElementById('btnConfirmRoll');
     const rollBtn = document.getElementById('btnRoll');
     const rerollBtn = document.getElementById('btnReroll');
+    const cancelBtn = document.getElementById('btnCancelRoll');
     tray.innerHTML = '';
 
     if (!this.pendingRoll) {
@@ -1104,11 +1135,13 @@ export const AssimilacaoModule = {
       confirmBtn.disabled = true;
       rollBtn.disabled = false;
       rerollBtn.style.display = 'none';
+      if (cancelBtn) cancelBtn.style.display = 'none';
       return;
     }
 
     rollBtn.disabled = true;
     rerollBtn.style.display = !this.pendingRoll.rerolled && this.canRerollCurrentTest() ? 'inline-block' : 'none';
+    if (cancelBtn) cancelBtn.style.display = 'inline-block';
     const { dice, keepCount, selected } = this.pendingRoll;
 
     dice.forEach((die, index) => {
