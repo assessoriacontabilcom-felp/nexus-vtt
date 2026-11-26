@@ -142,51 +142,89 @@ export function openTraitModal(sheetModule, slotIndex) {
   });
 }
 
-// Modal das 52 cartas de Assimilação filtradas por naipe (evolutivas, adaptativas, inoportunas, singulares)
+// Modal das 52 cartas de Assimilação filtradas por naipe e nível atual de Assimilação
 export function openAssimilationModal(sheetModule, slotIndex, categoryKey) {
   const cards = sheetModule.catalogs.assimilacoes[categoryKey] || [];
+  const currentAssimLevel = 10 - sheetModule.state.determinationLevel;
+
+  const getMinAssimLevel = (costText) => {
+    const match = String(costText || '').match(/assim\.?\s*(\d+)\+/i);
+    return match ? Number(match[1]) : 0;
+  };
+
   const { backdrop, close } = createModalBackdrop(`
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--paper-line); padding-bottom:8px; margin-bottom:10px;">
-      <h3 style="font-family:var(--font-display); color:var(--col-ass); font-size:1rem;">Assimilações (${categoryKey.toUpperCase()})</h3>
+      <div>
+        <h3 style="font-family:var(--font-display); color:var(--col-ass); font-size:1rem; margin:0;">
+          Assimilações (${categoryKey.toUpperCase()})
+        </h3>
+        <span style="font-size:0.76rem; color:var(--ink-muted);">
+          Seu nível atual de Assimilação: <strong style="color:var(--col-ass);">${currentAssimLevel}</strong>
+        </span>
+      </div>
       <button type="button" class="btn btn-ghost btn-sm" id="closeModal">Fechar</button>
     </div>
-    <input type="text" id="assimSearchInp" style="width:100%; background:#fff; color:var(--ink-dark);" placeholder="Buscar carta ou mutação..." />
+    <input type="text" id="assimSearchInp" style="width:100%; background:#fff; color:var(--ink-dark); margin-bottom:6px;" placeholder="Buscar carta ou mutação..." />
+    <label style="display:inline-flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--ink-muted); margin-bottom:8px; cursor:pointer;">
+      <input type="checkbox" id="chkShowLockedAssim" />
+      Mostrar mutações acima do meu nível de Assimilação
+    </label>
     <div class="trait-catalog-list" id="assimCatalogList" style="max-height:400px;"></div>
   `);
 
   const listEl = backdrop.querySelector('#assimCatalogList');
   const searchEl = backdrop.querySelector('#assimSearchInp');
+  const showLockedEl = backdrop.querySelector('#chkShowLockedAssim');
 
-  const renderCards = (query = '') => {
-    const term = query.toLowerCase().trim();
-    const matches = cards.filter(card =>
-      card.title.toLowerCase().includes(term) ||
-      card.card.toLowerCase().includes(term) ||
-      (card.mutations || []).some(mut =>
-        mut.name.toLowerCase().includes(term) || (mut.desc && mut.desc.toLowerCase().includes(term))
-      )
-    );
+  const renderCards = () => {
+    const term = searchEl.value.toLowerCase().trim();
+    const showLocked = showLockedEl.checked;
 
-    if (!matches.length) {
-      listEl.innerHTML = '<div class="muted">Nenhuma mutação encontrada.</div>';
+    const filteredCards = cards
+      .map(card => {
+        const visibleMutations = (card.mutations || []).filter(mut => {
+          const minLevel = getMinAssimLevel(mut.cost);
+          if (!showLocked && minLevel > currentAssimLevel) return false;
+          if (!term) return true;
+          return (
+            card.title.toLowerCase().includes(term) ||
+            card.card.toLowerCase().includes(term) ||
+            mut.name.toLowerCase().includes(term) ||
+            (mut.desc && mut.desc.toLowerCase().includes(term))
+          );
+        });
+
+        return { ...card, visibleMutations };
+      })
+      .filter(card => card.visibleMutations.length > 0);
+
+    if (!filteredCards.length) {
+      listEl.innerHTML = `<div class="muted">Nenhuma mutação disponível para Assimilação ${currentAssimLevel} com esse filtro.</div>`;
       return;
     }
 
-    listEl.innerHTML = matches.map(card => `
+    listEl.innerHTML = filteredCards.map(card => `
       <div class="catalog-item" style="border-left-color:var(--col-ass); cursor:default;">
         <strong style="color:var(--col-ass); font-size:1rem; margin-bottom:4px;">${card.card} — ${card.title}</strong>
-        ${(card.mutations || []).map(mut => `
-          <div style="margin-top:6px; padding-top:6px; border-top:1px dashed var(--paper-line); display:flex; justify-content:space-between; align-items:center; gap:10px;">
-            <div>
-              <div style="font-weight:700; color:var(--col-instinto); display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                ${renderCostIcons(mut.cost)}
-                <span>— ${mut.name}:</span>
+        ${card.visibleMutations.map(mut => {
+          const minLevel = getMinAssimLevel(mut.cost);
+          const isLocked = minLevel > currentAssimLevel;
+          return `
+            <div style="margin-top:6px; padding-top:6px; border-top:1px dashed var(--paper-line); display:flex; justify-content:space-between; align-items:center; gap:10px; opacity:${isLocked ? '0.6' : '1'};">
+              <div>
+                <div style="font-weight:700; color:var(--col-instinto); display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  ${renderCostIcons(mut.cost)}
+                  <span>— ${mut.name}: ${mut.effects?.length ? '⚡' : ''}</span>
+                </div>
+                <span style="display:block; margin-top:2px;">${mut.desc || ''}</span>
               </div>
-              <span style="display:block; margin-top:2px;">${mut.desc || ''}</span>
+              ${isLocked
+                ? `<span style="flex-shrink:0; font-size:0.75rem; font-weight:700; color:#8c2318; background:#f8d7da; padding:4px 8px; border-radius:4px;">Requer Assim. ${minLevel}+</span>`
+                : `<button type="button" class="btn btn-ghost btn-sm btn-add-mut" style="flex-shrink:0;" data-text="${mut.name} (${mut.cost}): ${mut.desc || card.title}">+ Adicionar</button>`
+              }
             </div>
-            <button type="button" class="btn btn-ghost btn-sm btn-add-mut" style="flex-shrink:0;" data-text="${mut.name} (${mut.cost}):${mut.desc || card.title}">+ Adicionar</button>
-          </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
     `).join('');
 
@@ -205,7 +243,8 @@ export function openAssimilationModal(sheetModule, slotIndex, categoryKey) {
   };
 
   renderCards();
-  searchEl.addEventListener('input', () => renderCards(searchEl.value));
+  searchEl.addEventListener('input', renderCards);
+  showLockedEl.addEventListener('change', renderCards);
   searchEl.focus();
 }
 
@@ -238,13 +277,13 @@ export function openItemsModal(sheetModule) {
 
     listEl.innerHTML = `
       ${packs.length ? '<strong style="color:var(--col-instinto); font-size:0.85rem;">PACOTES INICIAIS</strong>' : ''}
-      ${packs.map(pack => `<button type="button" class="catalog-item btn-add-item" data-item="${pack.name}:${pack.items.join(', ')}"><strong>${pack.name}</strong><span>${pack.items.join(', ')}</span></button>`).join('')}
+      ${packs.map(pack => `<button type="button" class="catalog-item btn-add-item" data-item="${pack.name}: ${pack.items.join(', ')}"><strong>${pack.name}</strong><span>${pack.items.join(', ')}</span></button>`).join('')}
 
       ${artifacts.length ? '<strong style="color:var(--col-ass); font-size:0.85rem; margin-top:8px;">ARTEFATOS</strong>' : ''}
-      ${artifacts.map(art => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-ass);" data-item="${art.name} (Escassez ${art.scarcity}) —${art.desc}"><strong style="color:var(--col-ass);">${art.name} (Escassez${art.scarcity} · ${art.slots} espaço)</strong><span>${art.desc}</span></button>`).join('')}
+      ${artifacts.map(art => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-ass);" data-item="${art.name} (Escassez ${art.scarcity}) — ${art.desc}"><strong style="color:var(--col-ass);">${art.name} (Escassez ${art.scarcity} · ${art.slots} espaço)</strong><span>${art.desc}</span></button>`).join('')}
 
       ${gear.length ? '<strong style="color:var(--col-pericia); font-size:0.85rem; margin-top:8px;">EQUIPAMENTOS COMUNS</strong>' : ''}
-      ${gear.map(item => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-pericia);" data-item="${item.name} (Escassez${item.scarcity})"><strong style="color:var(--col-pericia);">${item.name} (Escassez ${item.scarcity})</strong><span>${item.desc}</span></button>`).join('')}
+      ${gear.map(item => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-pericia);" data-item="${item.name} (Escassez ${item.scarcity})"><strong style="color:var(--col-pericia);">${item.name} (Escassez ${item.scarcity})</strong><span>${item.desc}</span></button>`).join('')}
     `;
 
     listEl.querySelectorAll('.btn-add-item').forEach(button => {
