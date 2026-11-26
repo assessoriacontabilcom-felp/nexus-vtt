@@ -41,7 +41,7 @@ export function formatSymbolsHTML(symbolsText, isSmall = false) {
   return `<span class="sym-group">${icons}</span>`;
 }
 
-// Localiza todas as mutações equipadas na ficha cruzando com o catálogo JSON
+// Localiza todas as mutações equipadas na ficha cruzando com o catálogo JSON e inferindo efeitos ativáveis
 export function getEquippedMutations(character, assimilationCatalog = {}) {
   const allMutations = Object.values(assimilationCatalog)
     .flat()
@@ -56,24 +56,75 @@ export function getEquippedMutations(character, assimilationCatalog = {}) {
       .map(line => line.trim())
       .filter(Boolean)
       .forEach((line, lineIdx) => {
-        // Extrai o nome antes do primeiro "(" ou ":" (ex: "Ligeiro (A): +1..." -> "Ligeiro")
         const rawName = line.split('(')[0].split(':')[0].trim();
         const catalogEntry = allMutations.find(
           mut => mut.name.toLowerCase() === rawName.toLowerCase()
         );
 
-        if (!catalogEntry) return;
+        const costText = catalogEntry?.cost || line;
+        const descText = catalogEntry?.desc || (line.includes(':') ? line.slice(line.indexOf(':') + 1).trim() : line);
+        const reqMatch = String(costText).match(/assim\.?\s*(\d+)\+/i);
+        const minAssimilation = reqMatch ? Number(reqMatch[1]) : 0;
+        const isLocked = minAssimilation > 0 && assimilationLevel < minAssimilation;
 
-        // Valida requisito de Assimilação mínima no custo (ex: "Assim. 7+")
-        const reqMatch = String(catalogEntry.cost || '').match(/assim\.?\s*(\d+)\+/i);
-        if (reqMatch && assimilationLevel < Number(reqMatch[1])) return;
+        let effects = catalogEntry?.effects ? [...catalogEntry.effects] : [];
+        const lower = descText.toLowerCase();
+
+        // Fallback de troca de dado caso o JSON ainda não tenha o array `effects`
+        if (!effects.length) {
+          const swapMatch = lower.match(/substitui[^.]*?d(6|10)\s*por\s*d(10|12)/);
+          if (swapMatch) {
+            const targetInst = SYSTEM_DATA.instincts.find(i => lower.includes(i.toLowerCase()));
+            const targetSkill = [...SYSTEM_DATA.knowledges, ...SYSTEM_DATA.practices].find(s => lower.includes(s.toLowerCase()));
+            effects.push({
+              when: targetInst ? `ins:${targetInst}` : targetSkill ? `skill:${targetSkill}` : 'always',
+              type: 'replaceDie',
+              from: Number(swapMatch[1]),
+              to: Number(swapMatch[2]),
+              all: true,
+              label: `Todos d${swapMatch[1]} → d${swapMatch[2]}`
+            });
+          }
+        }
+
+        // Garante botão de ativação (activeAction) para TODAS as mutações ativáveis/gastáveis
+        const hasRollOrPassiveOnly = effects.some(e =>
+          ['addA', 'addB', 'addC', 'ignoreC', 'bToA', 'replaceDie', 'extraKeep', 'perKeptDieA', 'perKeptDieB', 'discernimentoB', 'doubleA', 'useAssimAsInstinct', 'ignoreHealthPenalty'].includes(e.type)
+        );
+        const alreadyHasActiveBtn = effects.some(e => e.type === 'activeAction');
+
+        if (!alreadyHasActiveBtn && !hasRollOrPassiveOnly) {
+          const apMatch = lower.match(/(?:gasta|por)\s*(\d+)\s*(?:pontos?\s*de\s*)?assimila[çc][ãa]o/);
+          const dpMatch = lower.match(/(?:gasta|por)\s*(\d+)\s*(?:pontos?\s*de\s*)?determina[çc][ãa]o/);
+          const spendsAllAp = /gasta\s*tod[ao]s?\s*(?:os\s*pontos\s*de\s*)?assimila[çc][ãa]o/.test(lower);
+          const healMatch = lower.match(/regenera\s*\+?(\d+)\s*(?:pontos?\s*de\s*)?sa[úu]de/);
+
+          const costAp = spendsAllAp ? Math.max(1, character.assimilationPoints) : (apMatch ? Number(apMatch[1]) : 0);
+          const costDp = dpMatch ? Number(dpMatch[1]) : 0;
+          const heal = healMatch ? Number(healMatch[1]) : 0;
+
+          if (costAp > 0 || costDp > 0 || heal > 0 || /regenera completamente|redistribui pontos|age por instinto sem gastar|perde 1 assimila[çc][ãa]o no lugar/.test(lower)) {
+            const costLabel = costAp > 0 ? ` (-${costAp} Assim.)` : costDp > 0 ? ` (-${costDp} Det.)` : '';
+            const shortDesc = descText.length > 34 ? `${descText.slice(0, 34).trim()}...` : descText;
+            effects.push({
+              type: 'activeAction',
+              costAp,
+              costDp,
+              heal,
+              healFull: lower.includes('regenera completamente'),
+              label: `${shortDesc}${costLabel}`
+            });
+          }
+        }
 
         equipped.push({
           id: `mut-${slotIdx}-${lineIdx}`,
-          name: catalogEntry.name,
-          cost: catalogEntry.cost,
-          desc: catalogEntry.desc,
-          effects: catalogEntry.effects || []
+          name: catalogEntry?.name || rawName,
+          cost: costText,
+          desc: descText,
+          minAssimilation,
+          locked: isLocked,
+          effects: isLocked ? [] : effects
         });
       });
   });

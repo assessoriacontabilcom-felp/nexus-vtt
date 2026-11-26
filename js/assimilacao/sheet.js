@@ -474,7 +474,7 @@ export const AssimilacaoModule = {
               <button type="button" class="btn btn-ghost btn-sm btn-pick-trait" data-tidx="${index}">+ Catálogo</button>
               ${trait.name || trait.desc ? `<button type="button" class="btn btn-danger btn-sm btn-clear-trait" data-tidx="${index}">×</button>` : ''}
             </div>
-            <textarea class="trait-desc-lines" data-tidx="${index}" placeholder="Descrição...">${trait.desc}</textarea>
+            <textarea class="trait-desc-lines auto-expand" data-tidx="${index}" placeholder="Descrição...">${trait.desc}</textarea>
           </div>
         `).join('')}
       </div>
@@ -482,9 +482,10 @@ export const AssimilacaoModule = {
         <div>
           <div style="text-align:center;"><div class="ribbon-title ribbon-teal">ASSIMILAÇÕES</div></div>
           ${activeAbilities.length ? `
-            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; padding:6px; background:#edf4f6; border:1px dashed var(--col-ass); border-radius:6px;">
+              <span style="width:100%; font-size:0.75rem; font-weight:700; color:var(--col-ass);">Habilidades Ativáveis (${activeAbilities.length}):</span>
               ${activeAbilities.map((ab, idx) => `
-                <button type="button" class="btn btn-ghost btn-sm btn-use-mutation" data-abidx="${idx}" style="border-color:var(--col-ass); color:var(--col-ass); font-weight:700;">
+                <button type="button" class="btn btn-ghost btn-sm btn-use-mutation" data-abidx="${idx}" style="border-color:var(--col-ass); color:var(--col-ass); background:#fff; font-weight:700;">
                   ⚡ ${ab.mutName}: ${ab.label}
                 </button>
               `).join('')}
@@ -492,10 +493,11 @@ export const AssimilacaoModule = {
           ` : ''}
           <div class="assim-stack">
             ${assimilationCategories.map((cat, index) => `
-              <div class="assim-slot">
-                <div style="display:flex; flex-direction:column;">
-                  <textarea data-aidx="${index}" style="flex:1;" placeholder="Mutações ${cat.label}...">${char.assimilations[index] || ''}</textarea>
-                  <div style="padding:2px 8px 6px; text-align:right;">
+              <div class="assim-slot" style="align-items:stretch;">
+                <div style="display:flex; flex-direction:column; flex:1;">
+                  <textarea class="auto-expand" data-aidx="${index}" style="min-height:68px; resize:vertical; overflow-y:hidden;" placeholder="Mutações ${cat.label}...">${char.assimilations[index] || ''}</textarea>
+                  <div style="padding:4px 8px 6px; display:flex; justify-content:flex-end; gap:6px;">
+                    ${char.assimilations[index] ? `<button type="button" class="btn btn-danger btn-sm btn-clear-assim" data-aidx="${index}" title="Limpar ${cat.label}">×</button>` : ''}
                     <button type="button" class="btn btn-ghost btn-sm btn-pick-assim" data-aidx="${index}" data-cat="${cat.key}">+ ${cat.label}</button>
                   </div>
                 </div>
@@ -512,9 +514,9 @@ export const AssimilacaoModule = {
           <div style="text-align:right; margin-bottom:4px;">
             <button type="button" class="btn btn-ghost btn-sm" id="btnPickItems">+ Pacotes / Itens</button>
           </div>
-          <textarea id="inpInvText" class="inv-items-input" placeholder="Equipamentos...">${char.inventoryText}</textarea>
+          <textarea id="inpInvText" class="inv-items-input auto-expand" placeholder="Equipamentos...">${char.inventoryText}</textarea>
           <div style="text-align:center;"><div class="ribbon-title ribbon-ochre">ANOTAÇÕES</div></div>
-          <textarea id="inpAnotacoes" class="notes-paper-box" placeholder="Anotações...">${char.notes}</textarea>
+          <textarea id="inpAnotacoes" class="notes-paper-box auto-expand" placeholder="Anotações...">${char.notes}</textarea>
         </div>
       </div>
     `;
@@ -524,6 +526,16 @@ export const AssimilacaoModule = {
 
   bindBackInputs(host, activeAbilities = []) {
     const char = this.state;
+
+    // Expande automaticamente todas as caixas de texto conforme o conteúdo
+    const autoResize = (el) => {
+      el.style.height = 'auto';
+      el.style.height = `${Math.max(el.scrollHeight, 68)}px`;
+    };
+    host.querySelectorAll('textarea.auto-expand').forEach(textarea => {
+      autoResize(textarea);
+      textarea.addEventListener('input', () => autoResize(textarea));
+    });
 
     host.querySelectorAll('.btn-use-mutation').forEach(btn => {
       btn.addEventListener('click', async () => {
@@ -536,11 +548,11 @@ export const AssimilacaoModule = {
         const dpCost = ability.costDp || 0;
 
         if (apCost > 0 && char.assimilationPoints < apCost) {
-          alert('Pontos de Assimilação insuficientes.');
+          alert(`Pontos de Assimilação insuficientes (exige ${apCost}).`);
           return;
         }
         if (dpCost > 0 && char.determinationPoints < dpCost) {
-          alert('Pontos de Determinação insuficientes.');
+          alert(`Pontos de Determinação insuficientes (exige ${dpCost}).`);
           return;
         }
 
@@ -558,6 +570,7 @@ export const AssimilacaoModule = {
 
         this.saveState();
         this.refreshApplicableTraits();
+        this.renderBackPage(host);
 
         if (this.transport) {
           await this.transport.sendRoll({
@@ -606,6 +619,15 @@ export const AssimilacaoModule = {
       textarea.addEventListener('input', () => {
         char.assimilations[Number(textarea.dataset.aidx)] = textarea.value;
         this.saveState();
+        this.refreshApplicableTraits();
+      });
+    });
+
+    host.querySelectorAll('.btn-clear-assim').forEach(button => {
+      button.addEventListener('click', () => {
+        char.assimilations[Number(button.dataset.aidx)] = '';
+        this.saveState();
+        this.renderBackPage(host);
         this.refreshApplicableTraits();
       });
     });
