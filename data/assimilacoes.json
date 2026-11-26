@@ -4,156 +4,156 @@
       "card": "A♥",
       "title": "Assimilação Sensitiva",
       "mutations": [
-        { "cost": "A", "name": "Sensibilidade", "desc": "Gasta 1 Determinação para sentir criaturas assimiladas em até 30m na cena." },
-        { "cost": "AA", "name": "Consciência", "desc": "Mantém +1 dado adicional em testes que incluam Percepção." },
-        { "cost": "AAA", "name": "Discernimento", "desc": "Adiciona +1 Cervo à face de um dado mantido que já tenha pelo menos 1 Cervo." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Presciência", "desc": "No início da sessão rola 2 dados para substituir rolagens futuras do mesmo tipo." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Complicar", "desc": "Gasta 1 Determinação para forçar rerrolagem de 1 dado na sua presença." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Vidência", "desc": "Adia a ativação de uma Crise no Refúgio em até 24 horas." }
+        { "cost": "A", "name": "Sensibilidade", "desc": "Gasta 1 Determinação para sentir criaturas assimiladas em até 30m na cena.", "effects": [{ "type": "activeAction", "costDp": 1, "label": "Sentir assimilados (30m)" }] },
+        { "cost": "AA", "name": "Consciência", "desc": "Mantém +1 dado adicional em testes que incluam Percepção.", "effects": [{ "when": "ins:Percepção", "type": "extraKeep", "value": 1, "label": "Mantém +1 dado" }] },
+        { "cost": "AAA", "name": "Discernimento", "desc": "Adiciona +1 Cervo à face de um dado mantido que já tenha pelo menos 1 Cervo.", "effects": [{ "when": "always", "type": "discernimentoB", "value": 1, "label": "+1 Cervo se já houver Cervo" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Presciência", "desc": "No início da sessão rola 2 dados para substituir rolagens futuras do mesmo tipo.", "effects": [] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Complicar", "desc": "Gasta 1 Determinação para forçar rerrolagem de 1 dado na sua presença.", "effects": [{ "type": "activeAction", "costDp": 1, "label": "Forçar rerrolagem" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Vidência", "desc": "Adia a ativação de uma Crise no Refúgio em até 24 horas.", "effects": [] }
       ]
     },
     {
       "card": "2♥",
       "title": "Assimilação Reativa",
       "mutations": [
-        { "cost": "A", "name": "Ligeiro", "desc": "+1 ponto em Reação (pode ultrapassar o máximo)." },
-        { "cost": "AA", "name": "Rápido", "desc": "Em testes com Reação, gasta 1 Assimilação para adicionar +1 Joaninha." },
-        { "cost": "AAA", "name": "Preciso", "desc": "Anula 1 Coruja em testes que incluam Reação." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Alígero", "desc": "Substitui qualquer quantidade de Cervos por Joaninhas em testes com Reação." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Hábil", "desc": "Adiciona +1 Joaninha em testes que incluam Reação (acumula com Rápido)." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Celeridade", "desc": "Substitui todos os d6 por d10 em testes que incluam Reação." }
+        { "cost": "A", "name": "Ligeiro", "desc": "+1 ponto em Reação (pode ultrapassar o máximo).", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Reação", "value": 1, "canExceedMax": true }] },
+        { "cost": "AA", "name": "Rápido", "desc": "Em testes com Reação, gasta 1 Assimilação para adicionar +1 Joaninha.", "effects": [{ "when": "ins:Reação", "type": "addA", "value": 1, "costAp": 1, "optional": true, "label": "+1 Joaninha (-1 Assim.)" }] },
+        { "cost": "AAA", "name": "Preciso", "desc": "Anula 1 Coruja em testes que incluam Reação.", "effects": [{ "when": "ins:Reação", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Alígero", "desc": "Substitui qualquer quantidade de Cervos por Joaninhas em testes com Reação.", "effects": [{ "when": "ins:Reação", "type": "bToA", "value": 99, "label": "Cervos → Joaninhas" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Hábil", "desc": "Adiciona +1 Joaninha em testes que incluam Reação (acumula com Rápido).", "effects": [{ "when": "ins:Reação", "type": "addA", "value": 1, "label": "+1 Joaninha" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Celeridade", "desc": "Substitui todos os d6 por d10 em testes que incluam Reação.", "effects": [{ "when": "ins:Reação", "type": "replaceDie", "from": 6, "to": 10, "all": true, "label": "Todos d6 → d10" }] }
       ]
     },
     {
       "card": "3♥",
       "title": "Assimilação Sensorial",
       "mutations": [
-        { "cost": "A", "name": "Perceptivo", "desc": "+1 ponto em Percepção (pode ultrapassar o máximo)." },
-        { "cost": "AA", "name": "Alerta", "desc": "Em testes com Percepção, gasta 1 Assimilação para adicionar +1 Joaninha." },
-        { "cost": "AAA", "name": "Detalhista", "desc": "Anula 1 Coruja em testes que incluam Percepção." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Meticuloso", "desc": "Substitui qualquer quantidade de Cervos por Joaninhas em testes com Percepção." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Arguto", "desc": "Adiciona +1 Joaninha em testes que incluam Percepção." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Intuitivo", "desc": "Substitui todos os d6 por d10 em testes que incluam Percepção." }
+        { "cost": "A", "name": "Perceptivo", "desc": "+1 ponto em Percepção (pode ultrapassar o máximo).", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Percepção", "value": 1, "canExceedMax": true }] },
+        { "cost": "AA", "name": "Alerta", "desc": "Em testes com Percepção, gasta 1 Assimilação para adicionar +1 Joaninha.", "effects": [{ "when": "ins:Percepção", "type": "addA", "value": 1, "costAp": 1, "optional": true, "label": "+1 Joaninha (-1 Assim.)" }] },
+        { "cost": "AAA", "name": "Detalhista", "desc": "Anula 1 Coruja em testes que incluam Percepção.", "effects": [{ "when": "ins:Percepção", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Meticuloso", "desc": "Substitui qualquer quantidade de Cervos por Joaninhas em testes com Percepção.", "effects": [{ "when": "ins:Percepção", "type": "bToA", "value": 99, "label": "Cervos → Joaninhas" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Arguto", "desc": "Adiciona +1 Joaninha em testes que incluam Percepção.", "effects": [{ "when": "ins:Percepção", "type": "addA", "value": 1, "label": "+1 Joaninha" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Intuitivo", "desc": "Substitui todos os d6 por d10 em testes que incluam Percepção.", "effects": [{ "when": "ins:Percepção", "type": "replaceDie", "from": 6, "to": 10, "all": true, "label": "Todos d6 → d10" }] }
       ]
     },
     {
       "card": "4♥",
       "title": "Assimilação Vigorosa",
       "mutations": [
-        { "cost": "A", "name": "Resoluto", "desc": "+1 ponto em Resolução (pode ultrapassar o máximo)." },
-        { "cost": "AA", "name": "Resistente", "desc": "Em testes com Resolução, gasta 1 Assimilação para adicionar +1 Joaninha." },
-        { "cost": "AAA", "name": "Firme", "desc": "Anula 1 Coruja em testes que incluam Resolução." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Vigoroso", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Resolução." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Persistente", "desc": "Adiciona +1 Joaninha em testes que incluam Resolução." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Inabalável", "desc": "Substitui todos os d6 por d10 em testes que incluam Resolução." }
+        { "cost": "A", "name": "Resoluto", "desc": "+1 ponto em Resolução (pode ultrapassar o máximo).", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Resolução", "value": 1, "canExceedMax": true }] },
+        { "cost": "AA", "name": "Resistente", "desc": "Em testes com Resolução, gasta 1 Assimilação para adicionar +1 Joaninha.", "effects": [{ "when": "ins:Resolução", "type": "addA", "value": 1, "costAp": 1, "optional": true, "label": "+1 Joaninha (-1 Assim.)" }] },
+        { "cost": "AAA", "name": "Firme", "desc": "Anula 1 Coruja em testes que incluam Resolução.", "effects": [{ "when": "ins:Resolução", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Vigoroso", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Resolução.", "effects": [{ "when": "ins:Resolução", "type": "bToA", "value": 99, "label": "Cervos → Joaninhas" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Persistente", "desc": "Adiciona +1 Joaninha em testes que incluam Resolução.", "effects": [{ "when": "ins:Resolução", "type": "addA", "value": 1, "label": "+1 Joaninha" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Inabalável", "desc": "Substitui todos os d6 por d10 em testes que incluam Resolução.", "effects": [{ "when": "ins:Resolução", "type": "replaceDie", "from": 6, "to": 10, "all": true, "label": "Todos d6 → d10" }] }
       ]
     },
     {
       "card": "5♥",
       "title": "Assimilação Persuasiva",
       "mutations": [
-        { "cost": "A", "name": "Influente", "desc": "+1 ponto em Influência (pode ultrapassar o máximo)." },
-        { "cost": "AA", "name": "Persuasivo", "desc": "Em testes com Influência, gasta 1 Assimilação para adicionar +1 Joaninha." },
-        { "cost": "AAA", "name": "Convincente", "desc": "Anula 1 Coruja em testes que incluam Influência." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Magnético", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Influência." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Carismático", "desc": "Adiciona +1 Joaninha em testes que incluam Influência." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Majestoso", "desc": "Substitui todos os d6 por d10 em testes que incluam Influência." }
+        { "cost": "A", "name": "Influente", "desc": "+1 ponto em Influência (pode ultrapassar o máximo).", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Influência", "value": 1, "canExceedMax": true }] },
+        { "cost": "AA", "name": "Persuasivo", "desc": "Em testes com Influência, gasta 1 Assimilação para adicionar +1 Joaninha.", "effects": [{ "when": "ins:Influência", "type": "addA", "value": 1, "costAp": 1, "optional": true, "label": "+1 Joaninha (-1 Assim.)" }] },
+        { "cost": "AAA", "name": "Convincente", "desc": "Anula 1 Coruja em testes que incluam Influência.", "effects": [{ "when": "ins:Influência", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Magnético", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Influência.", "effects": [{ "when": "ins:Influência", "type": "bToA", "value": 99, "label": "Cervos → Joaninhas" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Carismático", "desc": "Adiciona +1 Joaninha em testes que incluam Influência.", "effects": [{ "when": "ins:Influência", "type": "addA", "value": 1, "label": "+1 Joaninha" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Majestoso", "desc": "Substitui todos os d6 por d10 em testes que incluam Influência.", "effects": [{ "when": "ins:Influência", "type": "replaceDie", "from": 6, "to": 10, "all": true, "label": "Todos d6 → d10" }] }
       ]
     },
     {
       "card": "6♥",
       "title": "Assimilação Brutal",
       "mutations": [
-        { "cost": "A", "name": "Forte", "desc": "+1 ponto em Potência (pode ultrapassar o máximo)." },
-        { "cost": "AA", "name": "Robusto", "desc": "Em testes com Potência, gasta 1 Assimilação para adicionar +1 Joaninha." },
-        { "cost": "AAA", "name": "Pujante", "desc": "Anula 1 Coruja em testes que incluam Potência." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Potente", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Potência." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Agressivo", "desc": "Adiciona +1 Joaninha em testes que incluam Potência." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Devastador", "desc": "Substitui todos os d6 por d10 em testes que incluam Potência." }
+        { "cost": "A", "name": "Forte", "desc": "+1 ponto em Potência (pode ultrapassar o máximo).", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Potência", "value": 1, "canExceedMax": true }] },
+        { "cost": "AA", "name": "Robusto", "desc": "Em testes com Potência, gasta 1 Assimilação para adicionar +1 Joaninha.", "effects": [{ "when": "ins:Potência", "type": "addA", "value": 1, "costAp": 1, "optional": true, "label": "+1 Joaninha (-1 Assim.)" }] },
+        { "cost": "AAA", "name": "Pujante", "desc": "Anula 1 Coruja em testes que incluam Potência.", "effects": [{ "when": "ins:Potência", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Potente", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Potência.", "effects": [{ "when": "ins:Potência", "type": "bToA", "value": 99, "label": "Cervos → Joaninhas" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Agressivo", "desc": "Adiciona +1 Joaninha em testes que incluam Potência.", "effects": [{ "when": "ins:Potência", "type": "addA", "value": 1, "label": "+1 Joaninha" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Devastador", "desc": "Substitui todos os d6 por d10 em testes que incluam Potência.", "effects": [{ "when": "ins:Potência", "type": "replaceDie", "from": 6, "to": 10, "all": true, "label": "Todos d6 → d10" }] }
       ]
     },
     {
       "card": "7♥",
       "title": "Assimilação Perspicaz",
       "mutations": [
-        { "cost": "A", "name": "Sagaz", "desc": "+1 ponto em Sagacidade (pode ultrapassar o máximo)." },
-        { "cost": "AA", "name": "Mente Assimilada", "desc": "Em testes com Sagacidade, gasta 1 Assimilação para adicionar +1 Joaninha." },
-        { "cost": "AAA", "name": "Perfeccionista", "desc": "Anula 1 Coruja em testes que incluam Sagacidade." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Solerte", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Sagacidade." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Potência Mental", "desc": "Adiciona +1 Joaninha em testes que incluam Sagacidade." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Genialidade", "desc": "Substitui todos os d6 por d10 em testes que incluam Sagacidade." }
+        { "cost": "A", "name": "Sagaz", "desc": "+1 ponto em Sagacidade (pode ultrapassar o máximo).", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Sagacidade", "value": 1, "canExceedMax": true }] },
+        { "cost": "AA", "name": "Mente Assimilada", "desc": "Em testes com Sagacidade, gasta 1 Assimilação para adicionar +1 Joaninha.", "effects": [{ "when": "ins:Sagacidade", "type": "addA", "value": 1, "costAp": 1, "optional": true, "label": "+1 Joaninha (-1 Assim.)" }] },
+        { "cost": "AAA", "name": "Perfeccionista", "desc": "Anula 1 Coruja em testes que incluam Sagacidade.", "effects": [{ "when": "ins:Sagacidade", "type": "ignoreC", "value": 1, "label": "Anula 1 Coruja" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Solerte", "desc": "Substitui qualquer número de Cervos por Joaninhas em testes com Sagacidade.", "effects": [{ "when": "ins:Sagacidade", "type": "bToA", "value": 99, "label": "Cervos → Joaninhas" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Potência Mental", "desc": "Adiciona +1 Joaninha em testes que incluam Sagacidade.", "effects": [{ "when": "ins:Sagacidade", "type": "addA", "value": 1, "label": "+1 Joaninha" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Genialidade", "desc": "Substitui todos os d6 por d10 em testes que incluam Sagacidade.", "effects": [{ "when": "ins:Sagacidade", "type": "replaceDie", "from": 6, "to": 10, "all": true, "label": "Todos d6 → d10" }] }
       ]
     },
     {
       "card": "8♥",
       "title": "Assimilação Regenerativa",
       "mutations": [
-        { "cost": "A", "name": "Resistente", "desc": "Ignora a penalidade do Nível de Saúde 4 (Laceração)." },
-        { "cost": "AA", "name": "Resiliente", "desc": "Regenera sem ajuda médica mesmo no Nível 2 (Debilitação) em 1 semana." },
-        { "cost": "AAA", "name": "Vigoroso", "desc": "Recebe +1 Ponto de Saúde adicional em cada Nível de Saúde." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Restauração", "desc": "Dobra os Pontos de Saúde regenerados ao concluir uma Recuperação." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Recuperação", "desc": "Regenera Pontos de Saúde igual a Resolução + Potência após cada cena." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Reintegração", "desc": "Regenera completamente em 1 dia (inclusive membros perdidos) se não morrer." }
+        { "cost": "A", "name": "Resistente", "desc": "Ignora a penalidade do Nível de Saúde 4 (Laceração).", "effects": [{ "type": "healthMod", "ignoreTier4": true }] },
+        { "cost": "AA", "name": "Resiliente", "desc": "Regenera sem ajuda médica mesmo no Nível 2 (Debilitação) em 1 semana.", "effects": [{ "type": "healthMod", "naturalHealTier2": true }] },
+        { "cost": "AAA", "name": "Vigoroso", "desc": "Recebe +1 Ponto de Saúde adicional em cada Nível de Saúde.", "effects": [{ "type": "healthMod", "hpPerLevel": 1 }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Restauração", "desc": "Dobra os Pontos de Saúde regenerados ao concluir uma Recuperação.", "effects": [] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Recuperação", "desc": "Regenera Pontos de Saúde igual a Resolução + Potência após cada cena.", "effects": [{ "type": "activeAction", "healFormula": "pot+res", "label": "Curar cena (Pot+Res)" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Reintegração", "desc": "Regenera completamente em 1 dia (inclusive membros perdidos) se não morrer.", "effects": [{ "type": "activeAction", "healFull": true, "label": "Regeneração total (1 dia)" }] }
       ]
     },
     {
       "card": "9♥",
       "title": "Assimilação Silvestre",
       "mutations": [
-        { "cost": "A", "name": "Sintonia Natural", "desc": "+1 ponto em Biologia (pode ultrapassar o máximo)." },
-        { "cost": "AA", "name": "Cura Verde", "desc": "Gasta 1 Determinação para reavivar vegetação num raio de 5m." },
-        { "cost": "AAA", "name": "Fotossíntese", "desc": "Não precisa de comida; basta água, contato com solo e 2h de sol por dia." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Animalismo", "desc": "Adiciona +2 Joaninhas em testes para influenciar animais." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Refúgio Natural", "desc": "Estabelece um Refúgio Vivo Nível 4 em áreas naturais." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Gênese", "desc": "Controla flora e fauna num raio de 1km por Ponto de Assimilação gasto." }
+        { "cost": "A", "name": "Sintonia Natural", "desc": "+1 ponto em Biologia (pode ultrapassar o máximo).", "effects": [{ "type": "aptitudeMod", "group": "knowledges", "target": "Biologia", "value": 1, "canExceedMax": true }] },
+        { "cost": "AA", "name": "Cura Verde", "desc": "Gasta 1 Determinação para reavivar vegetação num raio de 5m.", "effects": [{ "type": "activeAction", "costDp": 1, "label": "Reavivar vegetação (5m)" }] },
+        { "cost": "AAA", "name": "Fotossíntese", "desc": "Não precisa de comida; basta água, contato com solo e 2h de sol por dia.", "effects": [] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Animalismo", "desc": "Adiciona +2 Joaninhas em testes para influenciar animais.", "effects": [{ "when": "always", "type": "addA", "value": 2, "optional": true, "label": "+2 Joaninhas (Influenciar animais)" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Refúgio Natural", "desc": "Estabelece um Refúgio Vivo Nível 4 em áreas naturais.", "effects": [] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Gênese", "desc": "Controla flora e fauna num raio de 1km por Ponto de Assimilação gasto.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Controlar flora/fauna (1km)" }] }
       ]
     },
     {
       "card": "10♥",
       "title": "Assimilação Opressora",
       "mutations": [
-        { "cost": "A", "name": "Aproveitador", "desc": "+1 Cervo em testes com Influência contra alvos em inferioridade ou dúvida." },
-        { "cost": "AA", "name": "Sugestão", "desc": "Gasta 1 Assimilação para forçar alvo hesitante a seguir sugestão simples." },
-        { "cost": "AAA", "name": "Condicionamento", "desc": "Repete comando bem-sucedido em outro alvo da cena sem rolar novo teste." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Imposição", "desc": "Mantém +1 dado adicional em testes com Influência em locais pacíficos." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Mesmerizar", "desc": "Impõe condição narrativa (medo, obediência, silêncio) até o fim da cena." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Dominância", "desc": "Adiciona pontos de Expressão à Defesa de seu Refúgio." }
+        { "cost": "A", "name": "Aproveitador", "desc": "+1 Cervo em testes com Influência contra alvos em inferioridade ou dúvida.", "effects": [{ "when": "ins:Influência", "type": "addB", "value": 1, "optional": true, "label": "+1 Cervo (Alvo vulnerável)" }] },
+        { "cost": "AA", "name": "Sugestão", "desc": "Gasta 1 Assimilação para forçar alvo hesitante a seguir sugestão simples.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Sugestão simples" }] },
+        { "cost": "AAA", "name": "Condicionamento", "desc": "Repete comando bem-sucedido em outro alvo da cena sem rolar novo teste.", "effects": [] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Imposição", "desc": "Mantém +1 dado adicional em testes com Influência em locais pacíficos.", "effects": [{ "when": "ins:Influência", "type": "extraKeep", "value": 1, "optional": true, "label": "Mantém +1 dado (Local pacífico)" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Mesmerizar", "desc": "Impõe condição narrativa (medo, obediência, silêncio) até o fim da cena.", "effects": [] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Dominância", "desc": "Adiciona pontos de Expressão à Defesa de seu Refúgio.", "effects": [] }
       ]
     },
     {
       "card": "J♥",
       "title": "Assimilação Esguia",
       "mutations": [
-        { "cost": "A", "name": "Infiltrador", "desc": "+1 Joaninha em testes de Furtividade em ambiente urbano ou construído." },
-        { "cost": "AA", "name": "Pulso Sombrio", "desc": "Gasta 1 Assimilação para rerrolar um teste que inclua Furtividade." },
-        { "cost": "AAA", "name": "Esguio", "desc": "Após Fugir de um Conflito, ameaças priorizam outros alvos viáveis." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Subterfúgio", "desc": "Precisa de apenas 1 Joaninha para ter êxito em Furtividade fora de Conflito." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Auxílio das Sombras", "desc": "Adiciona +1 Cervo a cada dado de Furtividade mantido." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Ofuscação", "desc": "Adiciona +1 Joaninha à face de todos os dados em testes com Furtividade." }
+        { "cost": "A", "name": "Infiltrador", "desc": "+1 Joaninha em testes de Furtividade em ambiente urbano ou construído.", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Urbano)" }] },
+        { "cost": "AA", "name": "Pulso Sombrio", "desc": "Gasta 1 Assimilação para rerrolar um teste que inclua Furtividade.", "effects": [{ "when": "skill:Furtividade", "type": "reroll", "costAp": 1, "label": "Rerrolar Furtividade" }] },
+        { "cost": "AAA", "name": "Esguio", "desc": "Após Fugir de um Conflito, ameaças priorizam outros alvos viáveis.", "effects": [] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Subterfúgio", "desc": "Precisa de apenas 1 Joaninha para ter êxito em Furtividade fora de Conflito.", "effects": [] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Auxílio das Sombras", "desc": "Adiciona +1 Cervo a cada dado de Furtividade mantido.", "effects": [{ "when": "skill:Furtividade", "type": "perKeptDieB", "value": 1, "label": "+1 Cervo por dado mantido" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Ofuscação", "desc": "Adiciona +1 Joaninha à face de todos os dados em testes com Furtividade.", "effects": [{ "when": "skill:Furtividade", "type": "perKeptDieA", "value": 1, "label": "+1 Joaninha por dado mantido" }] }
       ]
     },
     {
       "card": "Q♥",
       "title": "Assimilação Indomável",
       "mutations": [
-        { "cost": "A", "name": "Fôlego Raro", "desc": "+1 Joaninha em testes de Atletismo com esforço contínuo (natação, escalada)." },
-        { "cost": "AA", "name": "Perseverança", "desc": "Gasta 1 Assimilação para continuar usando Determinação mesmo no Estado Suscetível." },
-        { "cost": "AAA", "name": "Disposição", "desc": "Mantém +1 dado adicional sempre que realizar teste que inclua Atletismo." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Obstinação", "desc": "Ao obter 2+ Joaninhas em Atletismo, restaura 1 Determinação no fim da cena." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Irredutível", "desc": "Gasta 2 Determinação para ignorar penalidades de Saúde na rodada." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Intrépido", "desc": "Imune a penalidades externas ou efeitos que impeçam agir normalmente." }
+        { "cost": "A", "name": "Fôlego Raro", "desc": "+1 Joaninha em testes de Atletismo com esforço contínuo (natação, escalada).", "effects": [{ "when": "skill:Atletismo", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Esforço contínuo)" }] },
+        { "cost": "AA", "name": "Perseverança", "desc": "Gasta 1 Assimilação para continuar usando Determinação mesmo no Estado Suscetível.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Usar Determinação Suscetível" }] },
+        { "cost": "AAA", "name": "Disposição", "desc": "Mantém +1 dado adicional sempre que realizar teste que inclua Atletismo.", "effects": [{ "when": "skill:Atletismo", "type": "extraKeep", "value": 1, "label": "Mantém +1 dado" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Obstinação", "desc": "Ao obter 2+ Joaninhas em Atletismo, restaura 1 Determinação no fim da cena.", "effects": [] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Irredutível", "desc": "Gasta 2 Determinação para ignorar penalidades de Saúde na rodada.", "effects": [{ "when": "always", "type": "ignoreHealthPenalty", "costDp": 2, "optional": true, "label": "Ignorar penalidade Saúde (-2 Det.)" }] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Intrépido", "desc": "Imune a penalidades externas ou efeitos que impeçam agir normalmente.", "effects": [{ "when": "always", "type": "ignoreHealthPenalty", "label": "Imune a penalidades" }] }
       ]
     },
     {
       "card": "K♥",
       "title": "Assimilação Primordial",
       "mutations": [
-        { "cost": "A", "name": "Primal", "desc": "O primeiro Ponto de Assimilação gasto em cada cena de Conflito é gratuito." },
-        { "cost": "AA", "name": "Supressor", "desc": "Gasta 1 Assimilação para anular 1 Coruja em qualquer teste em Conflito." },
-        { "cost": "AAA", "name": "Subjugar", "desc": "Ao Neutralizar Ameaça com Assimilação maior que a dela, ganha +2 Joaninhas." },
-        { "cost": "AAAA (Assim. 3+)", "name": "Proeza", "desc": "Gasta 2 Assimilação para usar o nível de Assimilação no lugar do Instinto." },
-        { "cost": "AAAAA (Assim. 5+)", "name": "Sinergia", "desc": "Pode pagar custos de Assimilação utilizados por aliados." },
-        { "cost": "AAAAAA (Assim. 7+)", "name": "Poder Inesgotável", "desc": "Não gasta Pontos de Assimilação para suas próprias ativações." }
+        { "cost": "A", "name": "Primal", "desc": "O primeiro Ponto de Assimilação gasto em cada cena de Conflito é gratuito.", "effects": [] },
+        { "cost": "AA", "name": "Supressor", "desc": "Gasta 1 Assimilação para anular 1 Coruja em qualquer teste em Conflito.", "effects": [{ "when": "always", "type": "ignoreC", "value": 1, "costAp": 1, "optional": true, "label": "Anular 1 Coruja (-1 Assim.)" }] },
+        { "cost": "AAA", "name": "Subjugar", "desc": "Ao Neutralizar Ameaça com Assimilação maior que a dela, ganha +2 Joaninhas.", "effects": [{ "when": "always", "type": "addA", "value": 2, "optional": true, "label": "+2 Joaninhas (Neutralizar menor)" }] },
+        { "cost": "AAAA (Assim. 3+)", "name": "Proeza", "desc": "Gasta 2 Assimilação para usar o nível de Assimilação no lugar do Instinto.", "effects": [{ "when": "always", "type": "useAssimAsInstinct", "costAp": 2, "optional": true, "label": "Usar Assimilação no Instinto (-2 Assim.)" }] },
+        { "cost": "AAAAA (Assim. 5+)", "name": "Sinergia", "desc": "Pode pagar custos de Assimilação utilizados por aliados.", "effects": [] },
+        { "cost": "AAAAAA (Assim. 7+)", "name": "Poder Inesgotável", "desc": "Não gasta Pontos de Assimilação para suas próprias ativações.", "effects": [{ "type": "freeAssimilation", "label": "Ativações gratuitas" }] }
       ]
     }
   ],
@@ -162,156 +162,156 @@
       "card": "A♦",
       "title": "Assimilação Anatômica",
       "mutations": [
-        { "cost": "B", "name": "Presas Aumentadas", "desc": "Gasta 1 Determinação para usar Letal ao morder (grátis por 4h após comer carne crua)." },
-        { "cost": "BB", "name": "Nadadeiras", "desc": "Gasta 1 Assimilação para nadar em velocidade normal. Perde 1 nível em Furtividade." },
-        { "cost": "BBB", "name": "Guelras", "desc": "Permite respirar debaixo d'água, mas consome o dobro de água." },
-        { "cost": "BBBB (Assim. 3+)", "name": "Braços Alongados", "desc": "Ao Neutralizar Ameaça, o alvo perde 1 Coruja no turno seguinte. Perde 1 nível em Manufaturas." },
-        { "cost": "BBBBB (Assim. 5+)", "name": "Poder de Carga", "desc": "Carrega o triplo de carga e dobra pontos em Neutralizar Ameaça. Perde todos os níveis em Manufaturas." },
-        { "cost": "BBBBBB (Assim. 7+)", "name": "Alado", "desc": "Asas orgânicas permitem voo pleno e +2 Joaninhas em Fuga. Impede usar coletes/mochilas no tórax." }
+        { "cost": "B", "name": "Presas Aumentadas", "desc": "Gasta 1 Determinação para usar Letal ao morder (grátis por 4h após comer carne crua).", "effects": [{ "type": "activeAction", "costDp": 1, "label": "Mordida Letal" }] },
+        { "cost": "BB", "name": "Nadadeiras", "desc": "Gasta 1 Assimilação para nadar em velocidade normal. Perde 1 nível em Furtividade.", "effects": [{ "type": "aptitudeMod", "group": "practices", "target": "Furtividade", "value": -1 }, { "type": "activeAction", "costAp": 1, "label": "Nadar em velocidade normal" }] },
+        { "cost": "BBB", "name": "Guelras", "desc": "Permite respirar debaixo d'água, mas consome o dobro de água.", "effects": [] },
+        { "cost": "BBBB (Assim. 3+)", "name": "Braços Alongados", "desc": "Ao Neutralizar Ameaça, o alvo perde 1 Coruja no turno seguinte. Perde 1 nível em Manufaturas.", "effects": [{ "type": "aptitudeMod", "group": "practices", "target": "Manufaturas", "value": -1 }] },
+        { "cost": "BBBBB (Assim. 5+)", "name": "Poder de Carga", "desc": "Carrega o triplo de carga e dobra pontos em Neutralizar Ameaça. Perde todos os níveis em Manufaturas.", "effects": [{ "type": "aptitudeZero", "group": "practices", "target": "Manufaturas" }] },
+        { "cost": "BBBBBB (Assim. 7+)", "name": "Alado", "desc": "Asas orgânicas permitem voo pleno e +2 Joaninhas em Fuga. Impede usar coletes/mochilas no tórax.", "effects": [{ "when": "always", "type": "addA", "value": 2, "optional": true, "label": "+2 Joaninhas (Fuga voando)" }] }
       ]
     },
     {
       "card": "2♦",
       "title": "Assimilação Cutânea",
       "mutations": [
-        { "cost": "B", "name": "Pele Aderente", "desc": "Move-se por paredes e tetos sem teste de Atletismo, mas perde 1 Joaninha em Fuga correndo." },
-        { "cost": "BB", "name": "Pele Ajustável", "desc": "Mantém +1 dado em Furtividade na sombra; perde 1 Joaninha em Expressão sob luz direta." },
-        { "cost": "BBB", "name": "Sentir Vibrações", "desc": "+1 Joaninha em Percepção tátil; perde 1 Joaninha em Reação contra estímulos inesperados." },
-        { "cost": "BBBB (Assim. 3+)", "name": "Cheiro Nocivo", "desc": "Gasta 1 Assimilação para impor 1 Pressão a seres vivos na cena; -1 Joaninha em testes sociais por 2 cenas." },
-        { "cost": "BBBBB (Assim. 5+)", "name": "Mudar Corpo", "desc": "Gasta 1 Assimilação para +2 Joaninhas em Furtividade/disfarce (roupas no tronco anulam)." },
-        { "cost": "BBBBBB (Assim. 7+)", "name": "Sentir o Ar", "desc": "Detecta sinais elétricos/térmicos/sísmicos num raio de 3km; perde 3 Saúde/hora sob sol direto." }
+        { "cost": "B", "name": "Pele Aderente", "desc": "Move-se por paredes e tetos sem teste de Atletismo, mas perde 1 Joaninha em Fuga correndo.", "effects": [{ "when": "always", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Fuga correndo)" }] },
+        { "cost": "BB", "name": "Pele Ajustável", "desc": "Mantém +1 dado em Furtividade na sombra; perde 1 Joaninha em Expressão sob luz direta.", "effects": [{ "when": "skill:Furtividade", "type": "extraKeep", "value": 1, "optional": true, "label": "Mantém +1 dado (Na sombra)" }, { "when": "skill:Expressão", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Luz direta)" }] },
+        { "cost": "BBB", "name": "Sentir Vibrações", "desc": "+1 Joaninha em Percepção tátil; perde 1 Joaninha em Reação contra estímulos inesperados.", "effects": [{ "when": "ins:Percepção", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Tátil)" }, { "when": "ins:Reação", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Surpresa)" }] },
+        { "cost": "BBBB (Assim. 3+)", "name": "Cheiro Nocivo", "desc": "Gasta 1 Assimilação para impor 1 Pressão a seres vivos na cena; -1 Joaninha em testes sociais por 2 cenas.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Exalar Cheiro Nocivo" }, { "when": "ins:Influência", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Cheiro residual)" }] },
+        { "cost": "BBBBB (Assim. 5+)", "name": "Mudar Corpo", "desc": "Gasta 1 Assimilação para +2 Joaninhas em Furtividade/disfarce (roupas no tronco anulam).", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": 2, "costAp": 1, "optional": true, "label": "+2 Joaninhas (-1 Assim.)" }] },
+        { "cost": "BBBBBB (Assim. 7+)", "name": "Sentir o Ar", "desc": "Detecta sinais elétricos/térmicos/sísmicos num raio de 3km; perde 3 Saúde/hora sob sol direto.", "effects": [] }
       ]
     },
     {
       "card": "3♦",
       "title": "Assimilação Camaleônica",
       "mutations": [
-        { "cost": "B", "name": "Camaleônico", "desc": "+1 Joaninha em Furtividade imóvel; perde 1 Determinação se sofrer queimadura solar." },
-        { "cost": "BB", "name": "Mudar o Rosto", "desc": "Mantém +1 dado para se disfarçar; -1 Joaninha em Percepção auditiva." },
-        { "cost": "BBA", "name": "Camuflagem", "desc": "Substitui dados de Furtividade por d12." },
-        { "cost": "BBCC (Assim. 3+)", "name": "Visão Periférica", "desc": "+1 ponto em Percepção (acima do máximo); -1 Cervo em pontaria com Atletismo ou Armas." },
-        { "cost": "BBC (Assim. 5+)", "name": "Malemolência", "desc": "+2 Joaninhas em interações sociais; +1 Coruja adicional ao tentar esconder informações." },
-        { "cost": "BBBBAA (Assim. 7+)", "name": "Invisibilidade", "desc": "Gasta 1 Assimilação para ficar invisível até o fim da cena (não pode desativar antes)." }
+        { "cost": "B", "name": "Camaleônico", "desc": "+1 Joaninha em Furtividade imóvel; perde 1 Determinação se sofrer queimadura solar.", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Imóvel)" }] },
+        { "cost": "BB", "name": "Mudar o Rosto", "desc": "Mantém +1 dado para se disfarçar; -1 Joaninha em Percepção auditiva.", "effects": [{ "when": "skill:Expressão", "type": "extraKeep", "value": 1, "optional": true, "label": "Mantém +1 dado (Disfarce)" }, { "when": "ins:Percepção", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Auditiva)" }] },
+        { "cost": "BBA", "name": "Camuflagem", "desc": "Substitui dados de Furtividade por d12.", "effects": [{ "when": "skill:Furtividade", "type": "replaceDie", "from": 10, "to": 12, "all": true, "label": "Dados de Furtividade → d12" }] },
+        { "cost": "BBCC (Assim. 3+)", "name": "Visão Periférica", "desc": "+1 ponto em Percepção (acima do máximo); -1 Cervo em pontaria com Atletismo ou Armas.", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Percepção", "value": 1, "canExceedMax": true }, { "when": "skill:Armas", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Pontaria)" }] },
+        { "cost": "BBC (Assim. 5+)", "name": "Malemolência", "desc": "+2 Joaninhas em interações sociais; +1 Coruja adicional ao tentar esconder informações.", "effects": [{ "when": "ins:Influência", "type": "addA", "value": 2, "optional": true, "label": "+2 Joaninhas (Social)" }, { "when": "always", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Esconder info)" }] },
+        { "cost": "BBBBAA (Assim. 7+)", "name": "Invisibilidade", "desc": "Gasta 1 Assimilação para ficar invisível até o fim da cena (não pode desativar antes).", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Ativar Invisibilidade" }] }
       ]
     },
     {
       "card": "4♦",
       "title": "Assimilação Escamosa",
       "mutations": [
-        { "cost": "B", "name": "Escamoso", "desc": "Reduz em 1 o dano cortante sofrido; -1 Joaninha em Expressão com não-Assimilados." },
-        { "cost": "BB", "name": "Escalador", "desc": "Mantém +1 dado em Atletismo para escalar; -1 Joaninha em Furtividade urbana." },
-        { "cost": "BBC", "name": "Escorregadio", "desc": "Mantém +1 dado para manter estabilidade; sofre dano dobrado por 24h na troca mensal de pele." },
-        { "cost": "BBBC (Assim. 3+)", "name": "Escamas Reativas", "desc": "Causa 1 de dano ao toque ou +1 Joaninha em Neutralizar; +1 Coruja em contato afetivo." },
-        { "cost": "BBBBA (Assim. 5+)", "name": "Evasão Natural", "desc": "Se alvejado, impõe 2 Pressões ao atacante (+2 Corujas no custo ou -2 Joaninhas)." },
-        { "cost": "BBBBAA (Assim. 7+)", "name": "Imunidade ao Calor", "desc": "Imune a dano térmico; -2 Joaninhas em Furtividade sob luz artificial." }
+        { "cost": "B", "name": "Escamoso", "desc": "Reduz em 1 o dano cortante sofrido; -1 Joaninha em Expressão com não-Assimilados.", "effects": [{ "when": "skill:Expressão", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Com não-Assimilados)" }] },
+        { "cost": "BB", "name": "Escalador", "desc": "Mantém +1 dado em Atletismo para escalar; -1 Joaninha em Furtividade urbana.", "effects": [{ "when": "skill:Atletismo", "type": "extraKeep", "value": 1, "optional": true, "label": "Mantém +1 dado (Escalar)" }, { "when": "skill:Furtividade", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Urbana)" }] },
+        { "cost": "BBC", "name": "Escorregadio", "desc": "Mantém +1 dado para manter estabilidade; sofre dano dobrado por 24h na troca mensal de pele.", "effects": [{ "when": "skill:Atletismo", "type": "extraKeep", "value": 1, "optional": true, "label": "Mantém +1 dado (Estabilidade)" }] },
+        { "cost": "BBBC (Assim. 3+)", "name": "Escamas Reativas", "desc": "Causa 1 de dano ao toque ou +1 Joaninha em Neutralizar; +1 Coruja em contato afetivo.", "effects": [{ "when": "always", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Neutralizar)" }] },
+        { "cost": "BBBBA (Assim. 5+)", "name": "Evasão Natural", "desc": "Se alvejado, impõe 2 Pressões ao atacante (+2 Corujas no custo ou -2 Joaninhas).", "effects": [] },
+        { "cost": "BBBBAA (Assim. 7+)", "name": "Imunidade ao Calor", "desc": "Imune a dano térmico; -2 Joaninhas em Furtividade sob luz artificial.", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Luz artificial)" }] }
       ]
     },
     {
       "card": "5♦",
       "title": "Assimilação Óssea",
       "mutations": [
-        { "cost": "B", "name": "Ossos Reativos", "desc": "Causa 1 de dano a quem o atingir corpo a corpo; -1 Joaninha em Expressão com espículos expostos." },
-        { "cost": "BB", "name": "Maleabilidade", "desc": "Mantém +1 dado em Furtividade; -1 Joaninha em Atletismo envolvendo equilíbrio/postura." },
-        { "cost": "BBA", "name": "Lâminas Ósseas", "desc": "+1 Joaninha em ataques corpo a corpo; +1 Coruja em testes de Medicina/Biologia no seu corpo." },
-        { "cost": "BBBC (Assim. 3+)", "name": "Presas de Mamute", "desc": "+1 Joaninha e -1 Cervo em testes para Neutralizar Ameaça em Conflito." },
-        { "cost": "BBBAA (Assim. 5+)", "name": "Exoesqueleto", "desc": "Por 3 Assimilação ignora dano cortante/perfurante na cena, mas fica impossibilitado de falar." },
-        { "cost": "BBBBAA (Assim. 7+)", "name": "Gigante", "desc": "Por 4 Assimilação dobra de tamanho (+2 dados mantidos em testes físicos; +1 Coruja em Furtividade/Percepção)." }
+        { "cost": "B", "name": "Ossos Reativos", "desc": "Causa 1 de dano a quem o atingir corpo a corpo; -1 Joaninha em Expressão com espículos expostos.", "effects": [{ "when": "skill:Expressão", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Espículos expostos)" }] },
+        { "cost": "BB", "name": "Maleabilidade", "desc": "Mantém +1 dado em Furtividade; -1 Joaninha em Atletismo envolvendo equilíbrio/postura.", "effects": [{ "when": "skill:Furtividade", "type": "extraKeep", "value": 1, "label": "Mantém +1 dado" }, { "when": "skill:Atletismo", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Equilíbrio)" }] },
+        { "cost": "BBA", "name": "Lâminas Ósseas", "desc": "+1 Joaninha em ataques corpo a corpo; +1 Coruja em testes de Medicina/Biologia no seu corpo.", "effects": [{ "when": "skill:Armas", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Corpo a corpo)" }] },
+        { "cost": "BBBC (Assim. 3+)", "name": "Presas de Mamute", "desc": "+1 Joaninha e -1 Cervo em testes para Neutralizar Ameaça em Conflito.", "effects": [{ "when": "always", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Neutralizar)" }, { "when": "always", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Neutralizar)" }] },
+        { "cost": "BBBAA (Assim. 5+)", "name": "Exoesqueleto", "desc": "Por 3 Assimilação ignora dano cortante/perfurante na cena, mas fica impossibilitado de falar.", "effects": [{ "type": "activeAction", "costAp": 3, "label": "Ativar Exoesqueleto" }] },
+        { "cost": "BBBBAA (Assim. 7+)", "name": "Gigante", "desc": "Por 4 Assimilação dobra de tamanho (+2 dados mantidos em testes físicos; +1 Coruja em Furtividade/Percepção).", "effects": [{ "type": "activeAction", "costAp": 4, "label": "Ativar Forma Gigante" }, { "when": "ins:Potência", "type": "extraKeep", "value": 2, "optional": true, "label": "Mantém +2 dados (Gigante)" }, { "when": "skill:Furtividade", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Gigante)" }] }
       ]
     },
     {
       "card": "6♦",
       "title": "Assimilação Gastrointestinal",
       "mutations": [
-        { "cost": "B", "name": "Saliva Ácida", "desc": "Digere qualquer matéria orgânica; -1 Cervo em testes que incluam Influência." },
-        { "cost": "BB", "name": "Ruminante", "desc": "Armazena alimento para 1 semana no estômago, mas precisa ruminar após refeições." },
-        { "cost": "BBB", "name": "Estômago Restaurador", "desc": "Regenera +1 Saúde por refeição completa, mas não consegue comer comida processada." },
-        { "cost": "BBBB (Assim. 3+)", "name": "Jato Ácido", "desc": "Gasta 1 Assimilação e 1 Joaninha para cuspir ácido (impõe 1 Pressão por nível de Assimilação)." },
-        { "cost": "BBBBB (Assim. 5+)", "name": "Imunidade à Intoxicação", "desc": "Imune a venenos/intoxicação, mas não restaura Determinação com comida." },
-        { "cost": "BBBBBB (Assim. 7+)", "name": "Glutão", "desc": "Come qualquer coisa mastigável; perde 1 Determinação por hora se ficar 1 dia sem comer." }
+        { "cost": "B", "name": "Saliva Ácida", "desc": "Digere qualquer matéria orgânica; -1 Cervo em testes que incluam Influência.", "effects": [{ "when": "ins:Influência", "type": "addB", "value": -1, "label": "-1 Cervo" }] },
+        { "cost": "BB", "name": "Ruminante", "desc": "Armazena alimento para 1 semana no estômago, mas precisa ruminar após refeições.", "effects": [] },
+        { "cost": "BBB", "name": "Estômago Restaurador", "desc": "Regenera +1 Saúde por refeição completa, mas não consegue comer comida processada.", "effects": [{ "type": "activeAction", "heal": 1, "label": "Refeição completa (+1 Saúde)" }] },
+        { "cost": "BBBB (Assim. 3+)", "name": "Jato Ácido", "desc": "Gasta 1 Assimilação e 1 Joaninha para cuspir ácido (impõe 1 Pressão por nível de Assimilação).", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Cuspir Jato Ácido" }] },
+        { "cost": "BBBBB (Assim. 5+)", "name": "Imunidade à Intoxicação", "desc": "Imune a venenos/intoxicação, mas não restaura Determinação com comida.", "effects": [] },
+        { "cost": "BBBBBB (Assim. 7+)", "name": "Glutão", "desc": "Come qualquer coisa mastigável; perde 1 Determinação por hora se ficar 1 dia sem comer.", "effects": [] }
       ]
     },
     {
       "card": "7♦",
       "title": "Assimilação Respiratória",
       "mutations": [
-        { "cost": "B", "name": "Pulmão Grosso", "desc": "Respira fumaça/ar rarefeito sem penalidade; +1 Coruja em Furtividade pela respiração ruidosa." },
-        { "cost": "BA", "name": "Fôlego Estendido", "desc": "Prende a respiração por até 5 minutos; perde 1 Determinação com odores fortes." },
-        { "cost": "BBC", "name": "Sopro Poderoso", "desc": "Gasta 1 Assimilação para empurrar ameaça 3m (+2 Joaninhas em Fuga); -1 Cervo ao sussurrar." },
-        { "cost": "BBBB (Assim. 3+)", "name": "Fôlego Inumano", "desc": "Age por Instinto sem gastar Assimilação; -1 dado mantido em Conhecimentos na cena." },
-        { "cost": "BBBBB (Assim. 5+)", "name": "Fôlego Reparador", "desc": "Ao perder Determinação, pode perder Assimilação no lugar." },
-        { "cost": "BBBBAA (Assim. 7+)", "name": "Fôlego Infinito", "desc": "Sobrevive sem ar indefinidamente; dobra efeitos de venenos/toxinas inaladas." }
+        { "cost": "B", "name": "Pulmão Grosso", "desc": "Respira fumaça/ar rarefeito sem penalidade; +1 Coruja em Furtividade pela respiração ruidosa.", "effects": [{ "when": "skill:Furtividade", "type": "addC", "value": 1, "label": "+1 Coruja (Respiração)" }] },
+        { "cost": "BA", "name": "Fôlego Estendido", "desc": "Prende a respiração por até 5 minutos; perde 1 Determinação com odores fortes.", "effects": [] },
+        { "cost": "BBC", "name": "Sopro Poderoso", "desc": "Gasta 1 Assimilação para empurrar ameaça 3m (+2 Joaninhas em Fuga); -1 Cervo ao sussurrar.", "effects": [{ "when": "always", "type": "addA", "value": 2, "costAp": 1, "optional": true, "label": "+2 Joaninhas Fuga (-1 Assim.)" }] },
+        { "cost": "BBBB (Assim. 3+)", "name": "Fôlego Inumano", "desc": "Age por Instinto sem gastar Assimilação; -1 dado mantido em Conhecimentos na cena.", "effects": [{ "type": "freeInstinctAction", "label": "Agir por Instinto gratuito" }] },
+        { "cost": "BBBBB (Assim. 5+)", "name": "Fôlego Reparador", "desc": "Ao perder Determinação, pode perder Assimilação no lugar.", "effects": [] },
+        { "cost": "BBBBAA (Assim. 7+)", "name": "Fôlego Infinito", "desc": "Sobrevive sem ar indefinidamente; dobra efeitos de venenos/toxinas inaladas.", "effects": [] }
       ]
     },
     {
       "card": "8♦",
       "title": "Assimilação Termorreguladora",
       "mutations": [
-        { "cost": "B", "name": "Resistência Térmica", "desc": "Imune a frio/calor moderado; contato físico prolongado impõe +1 Coruja nos testes da cena." },
-        { "cost": "BB", "name": "Conduzir Calor", "desc": "Aquece/esfria ao toque; regeneração de Saúde cai pela metade sem fonte de calor." },
-        { "cost": "BBA", "name": "Gerar Calor", "desc": "Gasta 1 Assimilação para penalizar em -1 Joaninha testes de Potência/Resolução na cena." },
-        { "cost": "BBBA (Assim. 3+)", "name": "Sangue Quente", "desc": "Gasta 1 Assimilação para manter +2 dados em Reação; perde 1 Determinação em ações físicas na cena." },
-        { "cost": "BBBBA (Assim. 5+)", "name": "Exala Vapor", "desc": "Nuvem de vapor impõe 2 Pressões a ataques à distância entrando ou saindo da área." },
-        { "cost": "BBBBBB (Assim. 7+)", "name": "Esquentar/Esfriar Região", "desc": "Gasta todos os pontos de Assimilação para alterar a temperatura regional em ±3°C por ponto." }
+        { "cost": "B", "name": "Resistência Térmica", "desc": "Imune a frio/calor moderado; contato físico prolongado impõe +1 Coruja nos testes da cena.", "effects": [] },
+        { "cost": "BB", "name": "Conduzir Calor", "desc": "Aquece/esfria ao toque; regeneração de Saúde cai pela metade sem fonte de calor.", "effects": [] },
+        { "cost": "BBA", "name": "Gerar Calor", "desc": "Gasta 1 Assimilação para penalizar em -1 Joaninha testes de Potência/Resolução na cena.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Gerar onda de calor" }] },
+        { "cost": "BBBA (Assim. 3+)", "name": "Sangue Quente", "desc": "Gasta 1 Assimilação para manter +2 dados em Reação; perde 1 Determinação em ações físicas na cena.", "effects": [{ "when": "ins:Reação", "type": "extraKeep", "value": 2, "costAp": 1, "optional": true, "label": "Mantém +2 dados (-1 Assim.)" }] },
+        { "cost": "BBBBA (Assim. 5+)", "name": "Exala Vapor", "desc": "Nuvem de vapor impõe 2 Pressões a ataques à distância entrando ou saindo da área.", "effects": [] },
+        { "cost": "BBBBBB (Assim. 7+)", "name": "Esquentar/Esfriar Região", "desc": "Gasta todos os pontos de Assimilação para alterar a temperatura regional em ±3°C por ponto.", "effects": [] }
       ]
     },
     {
       "card": "9♦",
       "title": "Assimilação Neural",
       "mutations": [
-        { "cost": "B", "name": "Pulso Mental", "desc": "Gasta 1 Assimilação para rerrolar Conhecimento; só recupera Determinação dormindo no escuro/silêncio." },
-        { "cost": "BB", "name": "Prever Dano", "desc": "Reduz em 1 o dano de um segundo golpe; perde 1 Determinação com múltiplos estímulos." },
-        { "cost": "BBA", "name": "Prever Ameaça", "desc": "Gasta 1 Assimilação e rola Reação/Sagacidade para anular símbolos da Ameaça antes do turno dela." },
-        { "cost": "BBBB (Assim. 3+)", "name": "Sintonia Mental", "desc": "Gasta 1 Assimilação para dar +1 Cervo a aliado fora de Conflito; +1 Coruja em Influência/Expressão." },
-        { "cost": "BBBBA (Assim. 5+)", "name": "Visão Mental", "desc": "Ao tirar 2+ Joaninhas em Conhecimento, obtém informação vital permanente; +1 Coruja em improvisos." },
-        { "cost": "BBBBAA (Assim. 7+)", "name": "Visão Verdadeira", "desc": "Gasta Assimilação para pedir revelação oculta ao Assimilador por cena sem rolar dados." }
+        { "cost": "B", "name": "Pulso Mental", "desc": "Gasta 1 Assimilação para rerrolar Conhecimento; só recupera Determinação dormindo no escuro/silêncio.", "effects": [{ "when": "group:knowledges", "type": "reroll", "costAp": 1, "label": "Rerrolar Conhecimento" }] },
+        { "cost": "BB", "name": "Prever Dano", "desc": "Reduz em 1 o dano de um segundo golpe; perde 1 Determinação com múltiplos estímulos.", "effects": [] },
+        { "cost": "BBA", "name": "Prever Ameaça", "desc": "Gasta 1 Assimilação e rola Reação/Sagacidade para anular símbolos da Ameaça antes do turno dela.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Prever Ameaça" }] },
+        { "cost": "BBBB (Assim. 3+)", "name": "Sintonia Mental", "desc": "Gasta 1 Assimilação para dar +1 Cervo a aliado fora de Conflito; +1 Coruja em Influência/Expressão.", "effects": [{ "when": "ins:Influência", "type": "addC", "value": 1, "label": "+1 Coruja" }, { "when": "skill:Expressão", "type": "addC", "value": 1, "label": "+1 Coruja" }] },
+        { "cost": "BBBBA (Assim. 5+)", "name": "Visão Mental", "desc": "Ao tirar 2+ Joaninhas em Conhecimento, obtém informação vital permanente; +1 Coruja em improvisos.", "effects": [] },
+        { "cost": "BBBBAA (Assim. 7+)", "name": "Visão Verdadeira", "desc": "Gasta Assimilação para pedir revelação oculta ao Assimilador por cena sem rolar dados.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Pedir Visão Verdadeira" }] }
       ]
     },
     {
       "card": "10♦",
       "title": "Assimilação Cardiovascular",
       "mutations": [
-        { "cost": "B", "name": "Sangue Frio", "desc": "Sem penalidades por medo ou tensão extrema; -1 Cervo em testes com Manufaturas." },
-        { "cost": "BB", "name": "Transe", "desc": "Restaura o dobro de Determinação na Recuperação se estiver com a Saúde cheia." },
-        { "cost": "BBA", "name": "Sangue Furioso", "desc": "Gasta 1 Assimilação para manter +2 dados em Potência/Atletismo; perde 1 Saúde no fim da rodada." },
-        { "cost": "BBBB (Assim. 3+)", "name": "Fingir Morte", "desc": "Quase para o coração por 5 minutos; dieta pobre em ferro piora penalidades de Saúde em 1 nível." },
-        { "cost": "BBBBC (Assim. 5+)", "name": "Sangue Regenerativo", "desc": "Gasta 1 Determinação para manter +1 dado e regenerar 1 Saúde (não pode anular Corujas)." },
-        { "cost": "BBBBAA (Assim. 7+)", "name": "Sangue Potente", "desc": "Gasta toda Assimilação para manter +1 dado extra por ponto gasto em ações físicas na cena." }
+        { "cost": "B", "name": "Sangue Frio", "desc": "Sem penalidades por medo ou tensão extrema; -1 Cervo em testes com Manufaturas.", "effects": [{ "when": "skill:Manufaturas", "type": "addB", "value": -1, "label": "-1 Cervo" }] },
+        { "cost": "BB", "name": "Transe", "desc": "Restaura o dobro de Determinação na Recuperação se estiver com a Saúde cheia.", "effects": [] },
+        { "cost": "BBA", "name": "Sangue Furioso", "desc": "Gasta 1 Assimilação para manter +2 dados em Potência/Atletismo; perde 1 Saúde no fim da rodada.", "effects": [{ "when": "ins:Potência", "type": "extraKeep", "value": 2, "costAp": 1, "optional": true, "label": "Mantém +2 dados (-1 Assim.)" }, { "when": "skill:Atletismo", "type": "extraKeep", "value": 2, "costAp": 1, "optional": true, "label": "Mantém +2 dados (-1 Assim.)" }] },
+        { "cost": "BBBB (Assim. 3+)", "name": "Fingir Morte", "desc": "Quase para o coração por 5 minutos; dieta pobre em ferro piora penalidades de Saúde em 1 nível.", "effects": [] },
+        { "cost": "BBBBC (Assim. 5+)", "name": "Sangue Regenerativo", "desc": "Gasta 1 Determinação para manter +1 dado e regenerar 1 Saúde (não pode anular Corujas).", "effects": [{ "when": "always", "type": "extraKeep", "value": 1, "costDp": 1, "optional": true, "label": "Mantém +1 dado e +1 Saúde (-1 Det.)" }] },
+        { "cost": "BBBBAA (Assim. 7+)", "name": "Sangue Potente", "desc": "Gasta toda Assimilação para manter +1 dado extra por ponto gasto em ações físicas na cena.", "effects": [] }
       ]
     },
     {
       "card": "J♦",
       "title": "Assimilação Fitomórfica",
       "mutations": [
-        { "cost": "B", "name": "Sintonia Verde", "desc": "Gasta 1 Assimilação descalço para sentir plantas num raio de 30m." },
-        { "cost": "BB", "name": "Casca Grossa", "desc": "+1 ponto em Resolução (acima do máximo); sofre dano dobrado de fogo/calor/ácido." },
-        { "cost": "BBB", "name": "Fotorreceptores", "desc": "Fotossíntese substitui comida (2h de sol/dia + solo); perde 1 Determinação no dia se não fizer." },
-        { "cost": "BBBB (Assim. 3+)", "name": "Raízes", "desc": "Extrai água/nutrientes do solo ao repousar; dormir sem contato com o solo impede recuperar Determinação." },
-        { "cost": "BBBBB (Assim. 5+)", "name": "Curar o Solo", "desc": "Reduz 1 Nível de Saúde para purificar um bioma; perde 1 Determinação se o bioma for degradado." },
-        { "cost": "BBBBBB (Assim. 7+)", "name": "Cura Comunal", "desc": "Gasta 2 Assimilação para criar aura de 20m onde aliados no solo regeneram 1 Saúde/rodada." }
+        { "cost": "B", "name": "Sintonia Verde", "desc": "Gasta 1 Assimilação descalço para sentir plantas num raio de 30m.", "effects": [{ "type": "activeAction", "costAp": 1, "label": "Sentir plantas (30m)" }] },
+        { "cost": "BB", "name": "Casca Grossa", "desc": "+1 ponto em Resolução (acima do máximo); sofre dano dobrado de fogo/calor/ácido.", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Resolução", "value": 1, "canExceedMax": true }] },
+        { "cost": "BBB", "name": "Fotorreceptores", "desc": "Fotossíntese substitui comida (2h de sol/dia + solo); perde 1 Determinação no dia se não fizer.", "effects": [] },
+        { "cost": "BBBB (Assim. 3+)", "name": "Raízes", "desc": "Extrai água/nutrientes do solo ao repousar; dormir sem contato com o solo impede recuperar Determinação.", "effects": [] },
+        { "cost": "BBBBB (Assim. 5+)", "name": "Curar o Solo", "desc": "Reduz 1 Nível de Saúde para purificar um bioma; perde 1 Determinação se o bioma for degradado.", "effects": [] },
+        { "cost": "BBBBBB (Assim. 7+)", "name": "Cura Comunal", "desc": "Gasta 2 Assimilação para criar aura de 20m onde aliados no solo regeneram 1 Saúde/rodada.", "effects": [{ "type": "activeAction", "costAp": 2, "label": "Aura de Cura Comunal (20m)" }] }
       ]
     },
     {
       "card": "Q♦",
       "title": "Assimilação Quimiorreceptora",
       "mutations": [
-        { "cost": "B", "name": "Faro Apurado", "desc": "Identifica odores residuais/feromônios; perde 1 Determinação após 5 min em odores intensos." },
-        { "cost": "BB", "name": "Farejar Toxinas", "desc": "Detecta venenos antes de ingerir/tocar; comidas temperadas impedem recuperar Determinação por 12h." },
-        { "cost": "BBA", "name": "Farejar Rastros", "desc": "+2 Joaninhas em Furtividade/Sobrevivência/Engenharia ao analisar rastros; -1 Cervo em Percepção em locais novos." },
-        { "cost": "BBBC (Assim. 3+)", "name": "Farejar Sentimentos", "desc": "Gasta 1 Assimilação para somar dados de Percepção em Expressão/Influência; +1 Coruja em multidões." },
-        { "cost": "BBBBB (Assim. 5+)", "name": "Secreções", "desc": "Marca trilhas/alvos por 24h; -2 Joaninhas em Furtividade contra criaturas com faro." },
-        { "cost": "BBBBCC (Assim. 7+)", "name": "Farejar Psicometria", "desc": "Gasta 3 Assimilação para ler o passado químico de objetos/locais; -2 Cervos em Resolução." }
+        { "cost": "B", "name": "Faro Apurado", "desc": "Identifica odores residuais/feromônios; perde 1 Determinação após 5 min em odores intensos.", "effects": [] },
+        { "cost": "BB", "name": "Farejar Toxinas", "desc": "Detecta venenos antes de ingerir/tocar; comidas temperadas impedem recuperar Determinação por 12h.", "effects": [] },
+        { "cost": "BBA", "name": "Farejar Rastros", "desc": "+2 Joaninhas em Furtividade/Sobrevivência/Engenharia ao analisar rastros; -1 Cervo em Percepção em locais novos.", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": 2, "optional": true, "label": "+2 Joaninhas (Rastros)" }, { "when": "skill:Sobrevivência", "type": "addA", "value": 2, "optional": true, "label": "+2 Joaninhas (Rastros)" }, { "when": "skill:Engenharia", "type": "addA", "value": 2, "optional": true, "label": "+2 Joaninhas (Rastros)" }] },
+        { "cost": "BBBC (Assim. 3+)", "name": "Farejar Sentimentos", "desc": "Gasta 1 Assimilação para somar dados de Percepção em Expressão/Influência; +1 Coruja em multidões.", "effects": [{ "when": "ins:Influência", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Multidão)" }] },
+        { "cost": "BBBBB (Assim. 5+)", "name": "Secreções", "desc": "Marca trilhas/alvos por 24h; -2 Joaninhas em Furtividade contra criaturas com faro.", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Contra faro)" }] },
+        { "cost": "BBBBCC (Assim. 7+)", "name": "Farejar Psicometria", "desc": "Gasta 3 Assimilação para ler o passado químico de objetos/locais; -2 Cervos em Resolução.", "effects": [{ "type": "activeAction", "costAp": 3, "label": "Psicometria Química" }, { "when": "ins:Resolução", "type": "addB", "value": -2, "label": "-2 Cervos" }] }
       ]
     },
     {
       "card": "K♦",
       "title": "Assimilação Metabólica",
       "mutations": [
-        { "cost": "B", "name": "Metabolismo Acelerado", "desc": "Regenera +1 Saúde extra; precisa comer o triplo por dia ou perde 1 Saúde/dia." },
-        { "cost": "BC", "name": "Metabolismo Afiado", "desc": "Mantém +1 dado em Reação, Potência ou Resolução física; +1 Coruja em Conhecimentos." },
-        { "cost": "BBA", "name": "Metabolismo Regenerativo", "desc": "Gasta 2 Determinação fora de Conflito para regenerar 4 Saúde; -1 Joaninha em testes físicos na cena." },
-        { "cost": "BBCC (Assim. 3+)", "name": "Imunidade Metabólica", "desc": "Imune a hipóxia, veneno leve e temperaturas; -1 Cervo cumulativo/dia sem ingerir sais." },
-        { "cost": "BBBBB (Assim. 5+)", "name": "Metabolismo Eficiente", "desc": "Gasta 2 Assimilação para manter +2 dados físicos; perde 1 Saúde por Coruja mantida." },
-        { "cost": "BBBBBB (Assim. 7+)", "name": "Metabolizar Instintos", "desc": "Redistribui pontos de Assimilação entre Potência/Reação/Resolução; sofre 1 Saúde de dano por rodada." }
+        { "cost": "B", "name": "Metabolismo Acelerado", "desc": "Regenera +1 Saúde extra; precisa comer o triplo por dia ou perde 1 Saúde/dia.", "effects": [] },
+        { "cost": "BC", "name": "Metabolismo Afiado", "desc": "Mantém +1 dado em Reação, Potência ou Resolução física; +1 Coruja em Conhecimentos.", "effects": [{ "when": "ins:Reação", "type": "extraKeep", "value": 1, "label": "Mantém +1 dado" }, { "when": "ins:Potência", "type": "extraKeep", "value": 1, "label": "Mantém +1 dado" }, { "when": "group:knowledges", "type": "addC", "value": 1, "label": "+1 Coruja" }] },
+        { "cost": "BBA", "name": "Metabolismo Regenerativo", "desc": "Gasta 2 Determinação fora de Conflito para regenerar 4 Saúde; -1 Joaninha em testes físicos na cena.", "effects": [{ "type": "activeAction", "costDp": 2, "heal": 4, "label": "Curar 4 Saúde (-2 Det.)" }] },
+        { "cost": "BBCC (Assim. 3+)", "name": "Imunidade Metabólica", "desc": "Imune a hipóxia, veneno leve e temperaturas; -1 Cervo cumulativo/dia sem ingerir sais.", "effects": [] },
+        { "cost": "BBBBB (Assim. 5+)", "name": "Metabolismo Eficiente", "desc": "Gasta 2 Assimilação para manter +2 dados físicos; perde 1 Saúde por Coruja mantida.", "effects": [{ "when": "ins:Potência", "type": "extraKeep", "value": 2, "costAp": 2, "optional": true, "label": "Mantém +2 dados (-2 Assim.)" }] },
+        { "cost": "BBBBBB (Assim. 7+)", "name": "Metabolizar Instintos", "desc": "Redistribui pontos de Assimilação entre Potência/Reação/Resolução; sofre 1 Saúde de dano por rodada.", "effects": [] }
       ]
     }
   ],
@@ -320,172 +320,276 @@
       "card": "A♠",
       "title": "Assimilação Atrofiante",
       "mutations": [
-        { "cost": "C", "name": "Rigidez Muscular", "desc": "Penalidade de -1 Cervo em testes que incluam Potência." },
-        { "cost": "CC", "name": "Rigidez Articular", "desc": "Penalidade de -1 Joaninha em testes de Potência ou Atletismo para corrida, escalada ou natação." },
-        { "cost": "CCC", "name": "Nervos Atrofiados", "desc": "Penalidade de -1 Joaninha em testes que incluam Reação para reagir a estímulos rápidos." },
-        { "cost": "CCCC", "name": "Digestão Ineficaz", "desc": "Precisa comer 3x por hora em pequenas porções ou a próxima Recuperação não tem efeito." },
-        { "cost": "CCCCC", "name": "Atrofia Muscular", "desc": "Ao falhar em teste com Potência ou Resolução, sofre 1 de dano à Saúde por Coruja mantida." },
-        { "cost": "CCCCCC", "name": "Falência", "desc": "Todo dano físico e todas as penalidades de Nível de Saúde são dobrados contra você." }
+        { "cost": "C", "name": "Rigidez Muscular", "desc": "Penalidade de -1 Cervo em testes que incluam Potência.", "effects": [{ "when": "ins:Potência", "type": "addB", "value": -1, "label": "-1 Cervo" }] },
+        { "cost": "CC", "name": "Rigidez Articular", "desc": "Penalidade de -1 Joaninha em testes de Potência ou Atletismo para corrida, escalada ou natação.", "effects": [{ "when": "skill:Atletismo", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Corrida/Escalada)" }] },
+        { "cost": "CCC", "name": "Nervos Atrofiados", "desc": "Penalidade de -1 Joaninha em testes que incluam Reação para reagir a estímulos rápidos.", "effects": [{ "when": "ins:Reação", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Estímulo rápido)" }] },
+        { "cost": "CCCC", "name": "Digestão Ineficaz", "desc": "Precisa comer 3x por hora em pequenas porções ou a próxima Recuperação não tem efeito.", "effects": [] },
+        { "cost": "CCCCC", "name": "Atrofia Muscular", "desc": "Ao falhar em teste com Potência ou Resolução, sofre 1 de dano à Saúde por Coruja mantida.", "effects": [] },
+        { "cost": "CCCCCC", "name": "Falência", "desc": "Todo dano físico e todas as penalidades de Nível de Saúde são dobrados contra você.", "effects": [{ "type": "healthMod", "doublePenalty": true }] }
       ]
     },
     {
       "card": "2♠",
       "title": "Assimilação Neuropática",
       "mutations": [
-        { "cost": "C", "name": "Debilidade", "desc": "Penalidade de -1 Joaninha em testes que incluam Atletismo." },
-        { "cost": "CC", "name": "Inabilidade", "desc": "Penalidade de -1 Cervo em testes que incluam Manufaturas, Erudição ou Expressão." },
-        { "cost": "CCC", "name": "Tremores", "desc": "Perde 1 Ponto de Determinação adicional por Coruja mantida em qualquer teste." },
-        { "cost": "CCCC", "name": "Desorientação", "desc": "Penalidade de -2 Joaninhas em Percepção ou Sobrevivência envolvendo distância ou direção." },
-        { "cost": "CCCCC", "name": "Fragilidade", "desc": "Perde 1 Determinação sempre que sofrer dano físico direto (ou 2 se reduzir Nível de Saúde)." },
-        { "cost": "CCCCCC", "name": "Inaptidão", "desc": "Durante Conflitos, todas as suas Ações sofrem penalidade de -1 Joaninha e -1 Cervo." }
+        { "cost": "C", "name": "Debilidade", "desc": "Penalidade de -1 Joaninha em testes que incluam Atletismo.", "effects": [{ "when": "skill:Atletismo", "type": "addA", "value": -1, "label": "-1 Joaninha" }] },
+        { "cost": "CC", "name": "Inabilidade", "desc": "Penalidade de -1 Cervo em testes que incluam Manufaturas, Erudição ou Expressão.", "effects": [{ "when": "skill:Manufaturas", "type": "addB", "value": -1, "label": "-1 Cervo" }, { "when": "skill:Erudição", "type": "addB", "value": -1, "label": "-1 Cervo" }, { "when": "skill:Expressão", "type": "addB", "value": -1, "label": "-1 Cervo" }] },
+        { "cost": "CCC", "name": "Tremores", "desc": "Perde 1 Ponto de Determinação adicional por Coruja mantida em qualquer teste.", "effects": [] },
+        { "cost": "CCCC", "name": "Desorientação", "desc": "Penalidade de -2 Joaninhas em Percepção ou Sobrevivência envolvendo distância ou direção.", "effects": [{ "when": "skill:Sobrevivência", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Direção)" }] },
+        { "cost": "CCCCC", "name": "Fragilidade", "desc": "Perde 1 Determinação sempre que sofrer dano físico direto (ou 2 se reduzir Nível de Saúde).", "effects": [] },
+        { "cost": "CCCCCC", "name": "Inaptidão", "desc": "Durante Conflitos, todas as suas Ações sofrem penalidade de -1 Joaninha e -1 Cervo.", "effects": [{ "when": "always", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Em Conflito)" }, { "when": "always", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Em Conflito)" }] }
       ]
     },
     {
       "card": "3♠",
       "title": "Assimilação Devoradora",
       "mutations": [
-        { "cost": "C", "name": "Coeficiente Calórico", "desc": "Após mais de 4 horas sem comer, sofre -1 Joaninha em todos os testes até saciar a fome." },
-        { "cost": "CC", "name": "Ignorância", "desc": "Após mais de 2 horas sem comer, sofre -1 Joaninha em testes que incluam Conhecimentos." },
-        { "cost": "CCC", "name": "Desarticulação", "desc": "Após mais de 2 horas sem comer, sofre +1 Coruja adicional em testes com Influência." },
-        { "cost": "CCCC", "name": "Apetite Corrosivo", "desc": "Perde 1 Saúde após 6 horas sem comer (+1 Saúde por hora adicional)." },
-        { "cost": "CCCCC", "name": "Apetite Vacilante", "desc": "Se ficar 24 horas sem comer, perde toda Determinação e entra em Estado Suscetível." },
-        { "cost": "CCCCCC", "name": "Ânsia Terrível", "desc": "Após 2 cenas sem comer, perde o controle para a fome na 3ª cena." }
+        { "cost": "C", "name": "Coeficiente Calórico", "desc": "Após mais de 4 horas sem comer, sofre -1 Joaninha em todos os testes até saciar a fome.", "effects": [{ "when": "always", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Com fome >4h)" }] },
+        { "cost": "CC", "name": "Ignorância", "desc": "Após mais de 2 horas sem comer, sofre -1 Joaninha em testes que incluam Conhecimentos.", "effects": [{ "when": "group:knowledges", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Com fome >2h)" }] },
+        { "cost": "CCC", "name": "Desarticulação", "desc": "Após mais de 2 horas sem comer, sofre +1 Coruja adicional em testes com Influência.", "effects": [{ "when": "ins:Influência", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Com fome >2h)" }] },
+        { "cost": "CCCC", "name": "Apetite Corrosivo", "desc": "Perde 1 Saúde após 6 horas sem comer (+1 Saúde por hora adicional).", "effects": [] },
+        { "cost": "CCCCC", "name": "Apetite Vacilante", "desc": "Se ficar 24 horas sem comer, perde toda Determinação e entra em Estado Suscetível.", "effects": [] },
+        { "cost": "CCCCCC", "name": "Ânsia Terrível", "desc": "Após 2 cenas sem comer, perde o controle para a fome na 3ª cena.", "effects": [] }
       ]
     },
     {
       "card": "4♠",
       "title": "Assimilação Secretora",
       "mutations": [
-        { "cost": "C", "name": "Mal Odor", "desc": "Penalidade de -1 Joaninha em Expressão em ambientes fechados ou pouco ventilados." },
-        { "cost": "CC", "name": "Inchaço Debilitante", "desc": "Penalidade de -1 Joaninha em Manufaturas ou Armas para manipular armas de fogo." },
-        { "cost": "CCC", "name": "Escorregadio", "desc": "Penalidade de -1 Joaninha em Atletismo em superfícies instáveis ou escorregadias." },
-        { "cost": "CCCC", "name": "Fragilidade Térmica", "desc": "Dobra penalidades sofridas em ambientes de calor ou frio extremos." },
-        { "cost": "CCCCC", "name": "Inflamável", "desc": "Contato com fogo causa 1 de dano por Ponto de Assimilação restante e zera esses pontos." },
-        { "cost": "CCCCCC", "name": "Bufotoxina", "desc": "Qualquer toque causa 1 de dano; dormir no mesmo cômodo exige teste de Medicina (AA)." }
+        { "cost": "C", "name": "Mal Odor", "desc": "Penalidade de -1 Joaninha em Expressão em ambientes fechados ou pouco ventilados.", "effects": [{ "when": "skill:Expressão", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Ambiente fechado)" }] },
+        { "cost": "CC", "name": "Inchaço Debilitante", "desc": "Penalidade de -1 Joaninha em Manufaturas ou Armas para manipular armas de fogo.", "effects": [{ "when": "skill:Armas", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Arma de fogo)" }] },
+        { "cost": "CCC", "name": "Escorregadio", "desc": "Penalidade de -1 Joaninha em Atletismo em superfícies instáveis ou escorregadias.", "effects": [{ "when": "skill:Atletismo", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Piso escorregadio)" }] },
+        { "cost": "CCCC", "name": "Fragilidade Térmica", "desc": "Dobra penalidades sofridas em ambientes de calor ou frio extremos.", "effects": [] },
+        { "cost": "CCCCC", "name": "Inflamável", "desc": "Contato com fogo causa 1 de dano por Ponto de Assimilação restante e zera esses pontos.", "effects": [] },
+        { "cost": "CCCCCC", "name": "Bufotoxina", "desc": "Qualquer toque causa 1 de dano; dormir no mesmo cômodo exige teste de Medicina (AA).", "effects": [] }
       ]
     },
     {
       "card": "5♠",
       "title": "Assimilação Calcificante",
       "mutations": [
-        { "cost": "C", "name": "Endurecido", "desc": "Penalidade de -1 Cervo em Furtividade ou Atletismo que exijam leveza ou equilíbrio." },
-        { "cost": "CC", "name": "Descoordenado", "desc": "Penalidade de -1 Joaninha por ação adicional em movimentos corporais sucessivos." },
-        { "cost": "CCC", "name": "Hesitante", "desc": "Em testes para Fuga, cancela metade das Joaninhas mantidas (arredondado para cima)." },
-        { "cost": "CCCC", "name": "Travado", "desc": "Cada Coruja mantida em Potência/Reação em Conflito aumenta em +1 Joaninha o custo de Fuga." },
-        { "cost": "CCCCC", "name": "Combalido", "desc": "Em todos os testes físicos, substitui os d10 que seriam rolados por d6." },
-        { "cost": "CCCCCC", "name": "Condrocalcinose", "desc": "Penalidade de +3 Corujas adicionais em todos os testes físicos." }
+        { "cost": "C", "name": "Endurecido", "desc": "Penalidade de -1 Cervo em Furtividade ou Atletismo que exijam leveza ou equilíbrio.", "effects": [{ "when": "skill:Furtividade", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Leveza)" }, { "when": "skill:Atletismo", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Equilíbrio)" }] },
+        { "cost": "CC", "name": "Descoordenado", "desc": "Penalidade de -1 Joaninha por ação adicional em movimentos corporais sucessivos.", "effects": [] },
+        { "cost": "CCC", "name": "Hesitante", "desc": "Em testes para Fuga, cancela metade das Joaninhas mantidas (arredondado para cima).", "effects": [{ "when": "always", "type": "halveA", "optional": true, "label": "Metade das Joaninhas (Fuga)" }] },
+        { "cost": "CCCC", "name": "Travado", "desc": "Cada Coruja mantida em Potência/Reação em Conflito aumenta em +1 Joaninha o custo de Fuga.", "effects": [] },
+        { "cost": "CCCCC", "name": "Combalido", "desc": "Em todos os testes físicos, substitui os d10 que seriam rolados por d6.", "effects": [{ "when": "ins:Potência", "type": "replaceDie", "from": 10, "to": 6, "all": true, "label": "Todos d10 → d6" }, { "when": "ins:Reação", "type": "replaceDie", "from": 10, "to": 6, "all": true, "label": "Todos d10 → d6" }] },
+        { "cost": "CCCCCC", "name": "Condrocalcinose", "desc": "Penalidade de +3 Corujas adicionais em todos os testes físicos.", "effects": [{ "when": "ins:Potência", "type": "addC", "value": 3, "label": "+3 Corujas" }, { "when": "ins:Reação", "type": "addC", "value": 3, "label": "+3 Corujas" }] }
       ]
     },
     {
       "card": "6♠",
       "title": "Assimilação Fotossensível",
       "mutations": [
-        { "cost": "C", "name": "Visão Sensível", "desc": "Penalidade de -1 Cervo em Percepção quando exposto à luz intensa." },
-        { "cost": "CC", "name": "Pele de Vampiro", "desc": "Perde 1 Determinação e 1 Saúde após mais de 30 minutos sob luz solar direta." },
-        { "cost": "CCC", "name": "Enxaqueca", "desc": "Passar uma cena inteira em local iluminado impede restaurar Determinação na Recuperação." },
-        { "cost": "CCCC", "name": "Pupilas Lentas", "desc": "Penalidade de -2 Joaninhas nas primeiras rodadas ao mudar bruscamente de iluminação." },
-        { "cost": "CCCCC", "name": "Visão Curta", "desc": "Penalidade permanente de -1 Joaninha em todos os testes de ataque à distância." },
-        { "cost": "CCCCCC", "name": "Visão Noturna", "desc": "Enxerga apenas no escuro total; qualquer luz ofusca e impõe -2 Joaninhas." }
+        { "cost": "C", "name": "Visão Sensível", "desc": "Penalidade de -1 Cervo em Percepção quando exposto à luz intensa.", "effects": [{ "when": "ins:Percepção", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Luz intensa)" }] },
+        { "cost": "CC", "name": "Pele de Vampiro", "desc": "Perde 1 Determinação e 1 Saúde após mais de 30 minutos sob luz solar direta.", "effects": [] },
+        { "cost": "CCC", "name": "Enxaqueca", "desc": "Passar uma cena inteira em local iluminado impede restaurar Determinação na Recuperação.", "effects": [] },
+        { "cost": "CCCC", "name": "Pupilas Lentas", "desc": "Penalidade de -2 Joaninhas nas primeiras rodadas ao mudar bruscamente de iluminação.", "effects": [{ "when": "always", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Mudança de luz)" }] },
+        { "cost": "CCCCC", "name": "Visão Curta", "desc": "Penalidade permanente de -1 Joaninha em todos os testes de ataque à distância.", "effects": [{ "when": "skill:Armas", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (À distância)" }] },
+        { "cost": "CCCCCC", "name": "Visão Noturna", "desc": "Enxerga apenas no escuro total; qualquer luz ofusca e impõe -2 Joaninhas.", "effects": [{ "when": "always", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Sob luz)" }] }
       ]
     },
     {
       "card": "7♠",
       "title": "Assimilação Litodérmica",
       "mutations": [
-        { "cost": "C", "name": "Afasta Animais", "desc": "Odor ferroso impõe -1 Joaninha em qualquer teste envolvendo interação com animais." },
-        { "cost": "CC", "name": "Ossos Frágeis", "desc": "Todo dano de impacto sofrido é aumentado em +1 ponto." },
-        { "cost": "CCC", "name": "Eletrossensível", "desc": "Dobra dano elétrico sofrido; perde 1 Determinação ao sofrer dano de calor/queimadura." },
-        { "cost": "CCCC", "name": "Carapaça Disforme", "desc": "Impede usar armaduras rígidas/coletes; precisa dormir em superfície macia para Recuperar." },
-        { "cost": "CCCCC", "name": "Muco Oxidante", "desc": "Enferruja equipamentos metálicos em contato por 1 cena (-1 nível de Qualidade)." },
-        { "cost": "CCCCCC", "name": "Fígado Estragado", "desc": "Exige sangria semanal ou perde 1 Nível de Saúde por semana até transplante cirúrgico." }
+        { "cost": "C", "name": "Afasta Animais", "desc": "Odor ferroso impõe -1 Joaninha em qualquer teste envolvendo interação com animais.", "effects": [{ "when": "always", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Com animais)" }] },
+        { "cost": "CC", "name": "Ossos Frágeis", "desc": "Todo dano de impacto sofrido é aumentado em +1 ponto.", "effects": [] },
+        { "cost": "CCC", "name": "Eletrossensível", "desc": "Dobra dano elétrico sofrido; perde 1 Determinação ao sofrer dano de calor/queimadura.", "effects": [] },
+        { "cost": "CCCC", "name": "Carapaça Disforme", "desc": "Impede usar armaduras rígidas/coletes; precisa dormir em superfície macia para Recuperar.", "effects": [] },
+        { "cost": "CCCCC", "name": "Muco Oxidante", "desc": "Enferruja equipamentos metálicos em contato por 1 cena (-1 nível de Qualidade).", "effects": [] },
+        { "cost": "CCCCCC", "name": "Fígado Estragado", "desc": "Exige sangria semanal ou perde 1 Nível de Saúde por semana até transplante cirúrgico.", "effects": [] }
       ]
     },
     {
       "card": "8♠",
       "title": "Assimilação Entorpecida",
       "mutations": [
-        { "cost": "C", "name": "Agorafobia", "desc": "Penalidade de -1 Joaninha em Percepção em áreas externas ou grandes espaços abertos." },
-        { "cost": "CC", "name": "Sensibilidade Auditiva", "desc": "Perde 1 Determinação sempre que exposto a ruídos intensos (explosões, tiros, gritos)." },
-        { "cost": "CCC", "name": "Sentidos Sobrecarregados", "desc": "Penalidade de -1 Joaninha em todas as Ações sob múltiplos estímulos sensoriais." },
-        { "cost": "CCCC", "name": "Desorientação Aguda", "desc": "Penalidade de +1 Coruja adicional em testes que incluam Percepção ou Reação." },
-        { "cost": "CCCCC", "name": "Devaneios", "desc": "1x/sessão o Assimilador introduz uma alucinação que reduz em -2 Joaninhas seu teste." },
-        { "cost": "CCCCCC", "name": "Dessensibilização Aguda", "desc": "Perde todos os pontos em Percepção (fica com 0; testes só com Percepção falham)." }
+        { "cost": "C", "name": "Agorafobia", "desc": "Penalidade de -1 Joaninha em Percepção em áreas externas ou grandes espaços abertos.", "effects": [{ "when": "ins:Percepção", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Espaço aberto)" }] },
+        { "cost": "CC", "name": "Sensibilidade Auditiva", "desc": "Perde 1 Determinação sempre que exposto a ruídos intensos (explosões, tiros, gritos).", "effects": [] },
+        { "cost": "CCC", "name": "Sentidos Sobrecarregados", "desc": "Penalidade de -1 Joaninha em todas as Ações sob múltiplos estímulos sensoriais.", "effects": [{ "when": "always", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Múltiplos estímulos)" }] },
+        { "cost": "CCCC", "name": "Desorientação Aguda", "desc": "Penalidade de +1 Coruja adicional em testes que incluam Percepção ou Reação.", "effects": [{ "when": "ins:Percepção", "type": "addC", "value": 1, "label": "+1 Coruja" }, { "when": "ins:Reação", "type": "addC", "value": 1, "label": "+1 Coruja" }] },
+        { "cost": "CCCCC", "name": "Devaneios", "desc": "1x/sessão o Assimilador introduz uma alucinação que reduz em -2 Joaninhas seu teste.", "effects": [{ "when": "always", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Alucinação)" }] },
+        { "cost": "CCCCCC", "name": "Dessensibilização Aguda", "desc": "Perde todos os pontos em Percepção (fica com 0; testes só com Percepção falham).", "effects": [{ "type": "aptitudeZero", "group": "instincts", "target": "Percepção" }] }
       ]
     },
     {
       "card": "9♠",
       "title": "Assimilação Aberrante",
       "mutations": [
-        { "cost": "C", "name": "Anomorfia", "desc": "Reduz permanentemente em 1 ponto um Instinto à sua escolha (mínimo 1)." },
-        { "cost": "CC", "name": "Pernas Disformes", "desc": "Em cada Conflito, remove a primeira Joaninha investida em Fuga." },
-        { "cost": "CCC", "name": "Hipersensibilidade", "desc": "Perde 1 Determinação sempre que for tocado firmemente ou sofrer dano." },
-        { "cost": "CCCC", "name": "Recuperação Debilitada", "desc": "Restaura apenas metade da Saúde e Determinação nas Recuperações." },
-        { "cost": "CCCCC", "name": "Descoordenação", "desc": "Sempre que obtiver 2+ Joaninhas num teste, uma delas se transforma em Coruja." },
-        { "cost": "CCCCCC", "name": "Aberração", "desc": "Aparência e voz completamente deformadas e irreconhecíveis." }
+        { "cost": "C", "name": "Anomorfia", "desc": "Reduz permanentemente em 1 ponto um Instinto à sua escolha (mínimo 1).", "effects": [] },
+        { "cost": "CC", "name": "Pernas Disformes", "desc": "Em cada Conflito, remove a primeira Joaninha investida em Fuga.", "effects": [{ "when": "always", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Fuga)" }] },
+        { "cost": "CCC", "name": "Hipersensibilidade", "desc": "Perde 1 Determinação sempre que for tocado firmemente ou sofrer dano.", "effects": [] },
+        { "cost": "CCCC", "name": "Recuperação Debilitada", "desc": "Restaura apenas metade da Saúde e Determinação nas Recuperações.", "effects": [] },
+        { "cost": "CCCCC", "name": "Descoordenação", "desc": "Sempre que obtiver 2+ Joaninhas num teste, uma delas se transforma em Coruja.", "effects": [{ "when": "always", "type": "aToCIfTwo", "label": "Se 2+ Joaninhas, 1 vira Coruja" }] },
+        { "cost": "CCCCCC", "name": "Aberração", "desc": "Aparência e voz completamente deformadas e irreconhecíveis.", "effects": [] }
       ]
     },
     {
       "card": "10♠",
       "title": "Assimilação Hipersensível",
       "mutations": [
-        { "cost": "C", "name": "Vulnerabilidade a Dor", "desc": "Ao sofrer dano físico, sofre -1 Joaninha no próximo teste de Potência, Reação ou Resolução." },
-        { "cost": "CC", "name": "Vulnerabilidade Emocional", "desc": "Ao receber crítica ou provocação, sofre -1 Cervo em todos os testes na cena." },
-        { "cost": "CCC", "name": "Dor Degradante", "desc": "Perde 1 Determinação toda vez que sofrer dano corpo a corpo ou de queda." },
-        { "cost": "CCCC", "name": "Sensibilidade Radical", "desc": "Penalidade de -2 Joaninhas em Conhecimentos ou Expressão sob barulho/luz/calor incômodo." },
-        { "cost": "CCCCC", "name": "Recuperação Sensível", "desc": "Recuperações perdem 50% de eficácia fora de ambiente silencioso, escuro e ameno." },
-        { "cost": "CCCCCC", "name": "Sensibilidade Extrema", "desc": "Com 3+ estímulos simultâneos perde 1 Saúde e 1 Determinação e mantém no máximo 1 dado." }
+        { "cost": "C", "name": "Vulnerabilidade a Dor", "desc": "Ao sofrer dano físico, sofre -1 Joaninha no próximo teste de Potência, Reação ou Resolução.", "effects": [{ "when": "ins:Potência", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Após dano)" }, { "when": "ins:Reação", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Após dano)" }, { "when": "ins:Resolução", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Após dano)" }] },
+        { "cost": "CC", "name": "Vulnerabilidade Emocional", "desc": "Ao receber crítica ou provocação, sofre -1 Cervo em todos os testes na cena.", "effects": [{ "when": "always", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Abalado)" }] },
+        { "cost": "CCC", "name": "Dor Degradante", "desc": "Perde 1 Determinação toda vez que sofrer dano corpo a corpo ou de queda.", "effects": [] },
+        { "cost": "CCCC", "name": "Sensibilidade Radical", "desc": "Penalidade de -2 Joaninhas em Conhecimentos ou Expressão sob barulho/luz/calor incômodo.", "effects": [{ "when": "group:knowledges", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Incômodo)" }, { "when": "skill:Expressão", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Incômodo)" }] },
+        { "cost": "CCCCC", "name": "Recuperação Sensível", "desc": "Recuperações perdem 50% de eficácia fora de ambiente silencioso, escuro e ameno.", "effects": [] },
+        { "cost": "CCCCCC", "name": "Sensibilidade Extrema", "desc": "Com 3+ estímulos simultâneos perde 1 Saúde e 1 Determinação e mantém no máximo 1 dado.", "effects": [] }
       ]
     },
     {
       "card": "J♠",
       "title": "Assimilação Mioclônica",
       "mutations": [
-        { "cost": "C", "name": "Espasmos Involuntários", "desc": "Sempre que rolar qualquer Coruja, sofre um espasmo brusco narrado pelo Assimilador." },
-        { "cost": "CC", "name": "Aflição Grave", "desc": "Em Conflito, sofre -1 Joaninha em ações de controle motor (recarga, furtividade, armadilhas)." },
-        { "cost": "CCC", "name": "Movimentos Involuntários", "desc": "Um membro aleatório sofre +1 Coruja em ações que dependam dele durante a cena." },
-        { "cost": "CCCC", "name": "Barulhos Involuntários", "desc": "Em silêncio absoluto emite sons involuntários, anulando surpresa ou emboscada." },
-        { "cost": "CCCCC", "name": "Agitação Constante", "desc": "Não consegue ficar imóvel por mais de 1 minuto (perde 1 Determinação por minuto parado)." },
-        { "cost": "CCCCCC", "name": "Debilidade Extrema", "desc": "Em testes físicos sofre -1 Joaninha, +1 Coruja e descarta o dado com mais Joaninhas." }
+        { "cost": "C", "name": "Espasmos Involuntários", "desc": "Sempre que rolar qualquer Coruja, sofre um espasmo brusco narrado pelo Assimilador.", "effects": [] },
+        { "cost": "CC", "name": "Aflição Grave", "desc": "Em Conflito, sofre -1 Joaninha em ações de controle motor (recarga, furtividade, armadilhas).", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Em Conflito)" }] },
+        { "cost": "CCC", "name": "Movimentos Involuntários", "desc": "Um membro aleatório sofre +1 Coruja em ações que dependam dele durante a cena.", "effects": [{ "when": "always", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Membro afetado)" }] },
+        { "cost": "CCCC", "name": "Barulhos Involuntários", "desc": "Em silêncio absoluto emite sons involuntários, anulando surpresa ou emboscada.", "effects": [] },
+        { "cost": "CCCCC", "name": "Agitação Constante", "desc": "Não consegue ficar imóvel por mais de 1 minuto (perde 1 Determinação por minuto parado).", "effects": [] },
+        { "cost": "CCCCCC", "name": "Debilidade Extrema", "desc": "Em testes físicos sofre -1 Joaninha, +1 Coruja e descarta o dado com mais Joaninhas.", "effects": [{ "when": "ins:Potência", "type": "addA", "value": -1, "label": "-1 Joaninha" }, { "when": "ins:Potência", "type": "addC", "value": 1, "label": "+1 Coruja" }] }
       ]
     },
     {
       "card": "Q♠",
       "title": "Assimilação Disfásica",
       "mutations": [
-        { "cost": "C", "name": "Desvio de Fala", "desc": "Lapsos de linguagem/gagueira sempre que rolar Coruja em comunicação verbal." },
-        { "cost": "CC", "name": "Fala Debilitada", "desc": "Penalidade de -1 Joaninha em Expressão ou Influência ao usar argumentos longos." },
-        { "cost": "CCC", "name": "Memória Debilitada", "desc": "Não consegue repetir instruções ou relatos com mais de uma frase sem distorcer." },
-        { "cost": "CCCC", "name": "Fala Simplificada", "desc": "Penalidade de -2 Joaninhas em Conhecimentos se houver comunicação verbal envolvida." },
-        { "cost": "CCCCC", "name": "Letra Ilegível", "desc": "Escrita embaralhada e incompreensível sem teste de Influência/Expressão (AA)." },
-        { "cost": "CCCCCC", "name": "Fala Incompreensível", "desc": "Em tensão emite apenas sons desconexos; ações verbais sofrem +2 Corujas." }
+        { "cost": "C", "name": "Desvio de Fala", "desc": "Lapsos de linguagem/gagueira sempre que rolar Coruja em comunicação verbal.", "effects": [] },
+        { "cost": "CC", "name": "Fala Debilitada", "desc": "Penalidade de -1 Joaninha em Expressão ou Influência ao usar argumentos longos.", "effects": [{ "when": "skill:Expressão", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Fala longa)" }, { "when": "ins:Influência", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Fala longa)" }] },
+        { "cost": "CCC", "name": "Memória Debilitada", "desc": "Não consegue repetir instruções ou relatos com mais de uma frase sem distorcer.", "effects": [] },
+        { "cost": "CCCC", "name": "Fala Simplificada", "desc": "Penalidade de -2 Joaninhas em Conhecimentos se houver comunicação verbal envolvida.", "effects": [{ "when": "group:knowledges", "type": "addA", "value": -2, "optional": true, "label": "-2 Joaninhas (Verbal)" }] },
+        { "cost": "CCCCC", "name": "Letra Ilegível", "desc": "Escrita embaralhada e incompreensível sem teste de Influência/Expressão (AA).", "effects": [] },
+        { "cost": "CCCCCC", "name": "Fala Incompreensível", "desc": "Em tensão emite apenas sons desconexos; ações verbais sofrem +2 Corujas.", "effects": [{ "when": "skill:Expressão", "type": "addC", "value": 2, "optional": true, "label": "+2 Corujas (Em tensão)" }, { "when": "ins:Influência", "type": "addC", "value": 2, "optional": true, "label": "+2 Corujas (Em tensão)" }] }
       ]
     },
     {
       "card": "K♠",
       "title": "Assimilação Terminal",
       "mutations": [
-        { "cost": "C", "name": "Pressão Estendida", "desc": "Penalidades sofridas por Coruja persistem por uma cena adicional." },
-        { "cost": "CC", "name": "Recuperação Sofrida", "desc": "Sempre que regenerar Saúde, sofre 1 ponto de dano direto antes da Recuperação." },
-        { "cost": "CCC", "name": "Pressão por Fracasso", "desc": "Sempre que falhar em um teste (0 Joaninhas), recebe +1 Coruja cumulativa no próximo." },
-        { "cost": "CCCC", "name": "Aptidões Arruinadas", "desc": "No início de cada cena, uma Aptidão aleatória é tratada como nível 0 até o fim da cena." },
-        { "cost": "CCCCC", "name": "Determinação Hesitante", "desc": "Ao gastar Determinação para manter dado extra, descarta automaticamente 1 Joaninha ou Cervo." },
-        { "cost": "CCCCCC", "name": "Inaptidão Extrema", "desc": "Todos os testes sofrem +2 Corujas e perde permanentemente 1 ponto de uma Aptidão." }
+        { "cost": "C", "name": "Pressão Estendida", "desc": "Penalidades sofridas por Coruja persistem por uma cena adicional.", "effects": [] },
+        { "cost": "CC", "name": "Recuperação Sofrida", "desc": "Sempre que regenerar Saúde, sofre 1 ponto de dano direto antes da Recuperação.", "effects": [] },
+        { "cost": "CCC", "name": "Pressão por Fracasso", "desc": "Sempre que falhar em um teste (0 Joaninhas), recebe +1 Coruja cumulativa no próximo.", "effects": [{ "when": "always", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Após fracasso)" }] },
+        { "cost": "CCCC", "name": "Aptidões Arruinadas", "desc": "No início de cada cena, uma Aptidão aleatória é tratada como nível 0 até o fim da cena.", "effects": [] },
+        { "cost": "CCCCC", "name": "Determinação Hesitante", "desc": "Ao gastar Determinação para manter dado extra, descarta automaticamente 1 Joaninha ou Cervo.", "effects": [] },
+        { "cost": "CCCCCC", "name": "Inaptidão Extrema", "desc": "Todos os testes sofrem +2 Corujas e perde permanentemente 1 ponto de uma Aptidão.", "effects": [{ "when": "always", "type": "addC", "value": 2, "label": "+2 Corujas em tudo" }] }
       ]
     }
   ],
   "singulares": [
-    { "card": "A♣", "title": "Assimilação do Bosque", "mutations": [{ "cost": "BA", "name": "Embaúba", "desc": "1h imóvel em contato com vegetação/solo úmido regenera 1 Saúde (dobra dano sofrido no período)." }, { "cost": "AC", "name": "Eucalyptus", "desc": "Nos Níveis de Saúde 1 ou 2, 6h imóvel no solo fértil habilita Recuperação como Nível 3." }, { "cost": "BC", "name": "Araucária", "desc": "Mais de 24h sem contato com solo fértil impõe -1 Joaninha em Sobrevivência." }] },
-    { "card": "2♣", "title": "Assimilação da Campina", "mutations": [{ "cost": "BA", "name": "Alecrim", "desc": "Sob sol direto por 1h, gasta 1 Determinação para dispensar comida e água por 24h." }, { "cost": "AC", "name": "Cágado", "desc": "Recupera 1 Saúde por cena sob o sol; sofre +1 dano de ataques de calor ou luz intensa." }, { "cost": "BC", "name": "Maria-da-campina", "desc": "Cada dia sem exposição direta ao sol impõe -1 Joaninha em Resolução." }] },
-    { "card": "3♣", "title": "Assimilação do Cerrado", "mutations": [{ "cost": "BA", "name": "Tatu-canastra", "desc": "Sob sol forte ou clima seco recebe -1 ponto de dano físico (perde o bônus na chuva/umidade)." }, { "cost": "AC", "name": "Mandacaru", "desc": "Ao sofrer 2+ dano num ataque, estilhaços causam 1 de dano corpo a corpo; -1 Joaninha em Reação na cena." }, { "cost": "BC", "name": "Lobo-guará", "desc": "Contato prolongado com água/chuva impõe -1 Joaninha em Potência e Furtividade até secar." }] },
-    { "card": "4♣", "title": "Assimilação da Colina", "mutations": [{ "cost": "BA", "name": "Caxinguelê", "desc": "Ignora penalidade de terreno inclinado/irregular; +1 Joaninha ao investir em Fuga; imune a queda sem dano." }, { "cost": "AC", "name": "Porco-do-mato", "desc": "+1 Joaninha em Atletismo (correr/saltar/escalar); +1 Coruja adicional em Furtividade." }, { "cost": "BC", "name": "Jabuti-piranga", "desc": "Em pisos planos/urbanos sofre -1 Joaninha em Reação até se adaptar por 1 cena." }] },
-    { "card": "5♣", "title": "Assimilação Desértica", "mutations": [{ "cost": "BA", "name": "Suculenta", "desc": "Permanece até 5 dias sem consumir água sem sofrer penalidades." }, { "cost": "AC", "name": "Diabo-espinhoso", "desc": "Agressores corpo a corpo sofrem 1 de dano; toda Coruja mantida causa 1 de dano a um aliado próximo." }, { "cost": "BC", "name": "Esquilo Terrestre", "desc": "Perde 1 Determinação se não dormir dentro de uma toca escavada." }] },
-    { "card": "6♣", "title": "Assimilação Florestal", "mutations": [{ "cost": "BA", "name": "Morcego-narigudo", "desc": "Ignora penalidades por baixa luminosidade natural, crepúsculo ou penumbra." }, { "cost": "AC", "name": "Sucuri", "desc": "+1 Cervo em Furtividade em vegetação densa; +1 Coruja em Expressão pela voz abafada." }, { "cost": "BC", "name": "Rato-do-mato", "desc": "Sair da sombra para luz intensa impõe -1 Joaninha em Percepção por 1 cena." }] },
-    { "card": "7♣", "title": "Assimilação do Manguezal", "mutations": [{ "cost": "BA", "name": "Mangue-vermelho", "desc": "Pode consumir água salobra ou salina sem qualquer prejuízo." }, { "cost": "AC", "name": "Caramujo-do-mangue", "desc": "Respira parcialmente pela pele submerso por até 10 min; sofre +1 dano de ataques físicos." }, { "cost": "BC", "name": "Sururu", "desc": "Após 6h em ambientes secos, sofre -1 Joaninha em Reação até se reidratar." }] },
-    { "card": "8♣", "title": "Assimilação Marinha", "mutations": [{ "cost": "BA", "name": "Toninha", "desc": "Nada com o dobro da velocidade sem testar Atletismo; dobra Joaninhas investidas em Fuga na água." }, { "cost": "AC", "name": "Biguá", "desc": "+1 Joaninha em Atletismo na água/areia fofa; +1 Coruja em Manufaturas." }, { "cost": "BC", "name": "Tartaruga-aruanã", "desc": "Correr ou saltar em pisos rígidos (concreto/metal) impõe +1 Coruja em Potência." }] },
-    { "card": "9♣", "title": "Assimilação da Montanha", "mutations": [{ "cost": "BA", "name": "Urubu-Rei", "desc": "Imune a penalidades de altitude elevada ou ar rarefeito acima de 3000m." }, { "cost": "AC", "name": "Calango-bandeira", "desc": "Prende a respiração por até 10 min em movimento; -1 Cervo em Influência/Expressão em clima seco." }, { "cost": "BC", "name": "Tucanuçu", "desc": "Após 1h em ambientes abafados/úmidos, reduz Sagacidade em 1 ponto." }] },
-    { "card": "10♣", "title": "Assimilação do Pântano", "mutations": [{ "cost": "BA", "name": "Guaiamu", "desc": "Ignora penalidade em lama/terreno encharcado; atravessa até 2m de água sem teste." }, { "cost": "AC", "name": "Garça-azul", "desc": "+1 Joaninha em Furtividade sobre lama/folhas alagadas; +1 Coruja em Reação em locais fechados." }, { "cost": "BC", "name": "Sapo-cururu", "desc": "Se for derrubado ou cair, sofre +1 dano de todos os ataques na cena se falhar em Potência." }] },
-    { "card": "J♣", "title": "Assimilação da Caatinga", "mutations": [{ "cost": "BA", "name": "Rola-bosta", "desc": "Reduz em 1 ponto dano cortante/perfurante de fontes naturais (espinhos, facas, garras)." }, { "cost": "AC", "name": "Asa-branca", "desc": "Imune a insolação extrema por até 2 cenas sem água/abrigo; reduz Influência em 1 ponto." }, { "cost": "BC", "name": "Teiú", "desc": "Em ambientes úmidos sem circulação de ar sofre -1 Joaninha em Reação após 2 horas." }] },
-    { "card": "Q♣", "title": "Assimilação Subterrânea", "mutations": [{ "cost": "BA", "name": "Tatu-canastra", "desc": "Detecta movimentos num raio de 10m tocando o chão descalço, mesmo na escuridão." }, { "cost": "AC", "name": "Coruja-buraqueira", "desc": "+1 Joaninha em Percepção para sons abafados/ecos; +1 Coruja em Reação contra ruídos altos." }, { "cost": "BC", "name": "Morcego-de-cauda-livre", "desc": "Múltiplos sons sobrepostos (multidões, máquinas) reduzem Sagacidade em 1 ponto." }] },
-    { "card": "K♣", "title": "Assimilação da Tundra", "mutations": [{ "cost": "BA", "name": "Líquen-de-mapa", "desc": "Imune a frio intenso ou neve mesmo abaixo de -20°C; dorme ao relento sem exaustão térmica." }, { "cost": "AC", "name": "Marmota-alpina", "desc": "Entra em torpor por até 12h estabilizando ferimentos; reduz Potência em 1 ao despertar." }, { "cost": "BC", "name": "Husky siberiano", "desc": "Pelagem densa protege do frio, mas impõe +1 Coruja em Atletismo em ambientes quentes." }] }
+    {
+      "card": "A♣",
+      "title": "Assimilação do Bosque",
+      "mutations": [
+        { "cost": "BA", "name": "Embaúba", "desc": "1h imóvel em contato com vegetação/solo úmido regenera 1 Saúde (dobra dano sofrido no período).", "effects": [{ "type": "activeAction", "heal": 1, "label": "1h no solo úmido (+1 Saúde)" }] },
+        { "cost": "AC", "name": "Eucalyptus", "desc": "Nos Níveis de Saúde 1 ou 2, 6h imóvel no solo fértil habilita Recuperação como Nível 3.", "effects": [] },
+        { "cost": "BC", "name": "Araucária", "desc": "Mais de 24h sem contato com solo fértil impõe -1 Joaninha em Sobrevivência.", "effects": [{ "when": "skill:Sobrevivência", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (>24h sem solo)" }] }
+      ]
+    },
+    {
+      "card": "2♣",
+      "title": "Assimilação da Campina",
+      "mutations": [
+        { "cost": "BA", "name": "Alecrim", "desc": "Sob sol direto por 1h, gasta 1 Determinação para dispensar comida e água por 24h.", "effects": [{ "type": "activeAction", "costDp": 1, "label": "1h sol direto (Dispensa comida/água)" }] },
+        { "cost": "AC", "name": "Cágado", "desc": "Recupera 1 Saúde por cena sob o sol; sofre +1 dano de ataques de calor ou luz intensa.", "effects": [{ "type": "activeAction", "heal": 1, "label": "Cena ao sol (+1 Saúde)" }] },
+        { "cost": "BC", "name": "Maria-da-campina", "desc": "Cada dia sem exposição direta ao sol impõe -1 Joaninha em Resolução.", "effects": [{ "when": "ins:Resolução", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Sem sol)" }] }
+      ]
+    },
+    {
+      "card": "3♣",
+      "title": "Assimilação do Cerrado",
+      "mutations": [
+        { "cost": "BA", "name": "Tatu-canastra", "desc": "Sob sol forte ou clima seco recebe -1 ponto de dano físico (perde o bônus na chuva/umidade).", "effects": [] },
+        { "cost": "AC", "name": "Mandacaru", "desc": "Ao sofrer 2+ dano num ataque, estilhaços causam 1 de dano corpo a corpo; -1 Joaninha em Reação na cena.", "effects": [{ "when": "ins:Reação", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Após estilhaços)" }] },
+        { "cost": "BC", "name": "Lobo-guará", "desc": "Contato prolongado com água/chuva impõe -1 Joaninha em Potência e Furtividade até secar.", "effects": [{ "when": "ins:Potência", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Molhado)" }, { "when": "skill:Furtividade", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Molhado)" }] }
+      ]
+    },
+    {
+      "card": "4♣",
+      "title": "Assimilação da Colina",
+      "mutations": [
+        { "cost": "BA", "name": "Caxinguelê", "desc": "Ignora penalidade de terreno inclinado/irregular; +1 Joaninha ao investir em Fuga; imune a queda sem dano.", "effects": [{ "when": "always", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Fuga)" }] },
+        { "cost": "AC", "name": "Porco-do-mato", "desc": "+1 Joaninha em Atletismo (correr/saltar/escalar); +1 Coruja adicional em Furtividade.", "effects": [{ "when": "skill:Atletismo", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Correr/Saltar)" }, { "when": "skill:Furtividade", "type": "addC", "value": 1, "label": "+1 Coruja" }] },
+        { "cost": "BC", "name": "Jabuti-piranga", "desc": "Em pisos planos/urbanos sofre -1 Joaninha em Reação até se adaptar por 1 cena.", "effects": [{ "when": "ins:Reação", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Piso plano)" }] }
+      ]
+    },
+    {
+      "card": "5♣",
+      "title": "Assimilação Desértica",
+      "mutations": [
+        { "cost": "BA", "name": "Suculenta", "desc": "Permanece até 5 dias sem consumir água sem sofrer penalidades.", "effects": [] },
+        { "cost": "AC", "name": "Diabo-espinhoso", "desc": "Agressores corpo a corpo sofrem 1 de dano; toda Coruja mantida causa 1 de dano a um aliado próximo.", "effects": [] },
+        { "cost": "BC", "name": "Esquilo Terrestre", "desc": "Perde 1 Determinação se não dormir dentro de uma toca escavada.", "effects": [] }
+      ]
+    },
+    {
+      "card": "6♣",
+      "title": "Assimilação Florestal",
+      "mutations": [
+        { "cost": "BA", "name": "Morcego-narigudo", "desc": "Ignora penalidades por baixa luminosidade natural, crepúsculo ou penumbra.", "effects": [] },
+        { "cost": "AC", "name": "Sucuri", "desc": "+1 Cervo em Furtividade em vegetação densa; +1 Coruja em Expressão pela voz abafada.", "effects": [{ "when": "skill:Furtividade", "type": "addB", "value": 1, "optional": true, "label": "+1 Cervo (Vegetação densa)" }, { "when": "skill:Expressão", "type": "addC", "value": 1, "label": "+1 Coruja" }] },
+        { "cost": "BC", "name": "Rato-do-mato", "desc": "Sair da sombra para luz intensa impõe -1 Joaninha em Percepção por 1 cena.", "effects": [{ "when": "ins:Percepção", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Luz intensa)" }] }
+      ]
+    },
+    {
+      "card": "7♣",
+      "title": "Assimilação do Manguezal",
+      "mutations": [
+        { "cost": "BA", "name": "Mangue-vermelho", "desc": "Pode consumir água salobra ou salina sem qualquer prejuízo.", "effects": [] },
+        { "cost": "AC", "name": "Caramujo-do-mangue", "desc": "Respira parcialmente pela pele submerso por até 10 min; sofre +1 dano de ataques físicos.", "effects": [] },
+        { "cost": "BC", "name": "Sururu", "desc": "Após 6h em ambientes secos, sofre -1 Joaninha em Reação até se reidratar.", "effects": [{ "when": "ins:Reação", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Ambiente seco >6h)" }] }
+      ]
+    },
+    {
+      "card": "8♣",
+      "title": "Assimilação Marinha",
+      "mutations": [
+        { "cost": "BA", "name": "Toninha", "desc": "Nada com o dobro da velocidade sem testar Atletismo; dobra Joaninhas investidas em Fuga na água.", "effects": [{ "when": "always", "type": "doubleA", "optional": true, "label": "Dobra Joaninhas (Fuga na água)" }] },
+        { "cost": "AC", "name": "Biguá", "desc": "+1 Joaninha em Atletismo na água/areia fofa; +1 Coruja em Manufaturas.", "effects": [{ "when": "skill:Atletismo", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Água/Areia)" }, { "when": "skill:Manufaturas", "type": "addC", "value": 1, "label": "+1 Coruja" }] },
+        { "cost": "BC", "name": "Tartaruga-aruanã", "desc": "Correr ou saltar em pisos rígidos (concreto/metal) impõe +1 Coruja em Potência.", "effects": [{ "when": "ins:Potência", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Piso rígido)" }] }
+      ]
+    },
+    {
+      "card": "9♣",
+      "title": "Assimilação da Montanha",
+      "mutations": [
+        { "cost": "BA", "name": "Urubu-Rei", "desc": "Imune a penalidades de altitude elevada ou ar rarefeito acima de 3000m.", "effects": [] },
+        { "cost": "AC", "name": "Calango-bandeira", "desc": "Prende a respiração por até 10 min em movimento; -1 Cervo em Influência/Expressão em clima seco.", "effects": [{ "when": "ins:Influência", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Clima seco)" }, { "when": "skill:Expressão", "type": "addB", "value": -1, "optional": true, "label": "-1 Cervo (Clima seco)" }] },
+        { "cost": "BC", "name": "Tucanuçu", "desc": "Após 1h em ambientes abafados/úmidos, reduz Sagacidade em 1 ponto.", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Sagacidade", "value": -1, "optional": true, "label": "-1 Sagacidade (Ambiente abafado)" }] }
+      ]
+    },
+    {
+      "card": "10♣",
+      "title": "Assimilação do Pântano",
+      "mutations": [
+        { "cost": "BA", "name": "Guaiamu", "desc": "Ignora penalidade em lama/terreno encharcado; atravessa até 2m de água sem teste.", "effects": [] },
+        { "cost": "AC", "name": "Garça-azul", "desc": "+1 Joaninha em Furtividade sobre lama/folhas alagadas; +1 Coruja em Reação em locais fechados.", "effects": [{ "when": "skill:Furtividade", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Lama/Alagado)" }, { "when": "ins:Reação", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Local fechado)" }] },
+        { "cost": "BC", "name": "Sapo-cururu", "desc": "Se for derrubado ou cair, sofre +1 dano de todos os ataques na cena se falhar em Potência.", "effects": [] }
+      ]
+    },
+    {
+      "card": "J♣",
+      "title": "Assimilação da Caatinga",
+      "mutations": [
+        { "cost": "BA", "name": "Rola-bosta", "desc": "Reduz em 1 ponto dano cortante/perfurante de fontes naturais (espinhos, facas, garras).", "effects": [] },
+        { "cost": "AC", "name": "Asa-branca", "desc": "Imune a insolação extrema por até 2 cenas sem água/abrigo; reduz Influência em 1 ponto.", "effects": [{ "type": "aptitudeMod", "group": "instincts", "target": "Influência", "value": -1 }] },
+        { "cost": "BC", "name": "Teiú", "desc": "Em ambientes úmidos sem circulação de ar sofre -1 Joaninha em Reação após 2 horas.", "effects": [{ "when": "ins:Reação", "type": "addA", "value": -1, "optional": true, "label": "-1 Joaninha (Ambiente úmido >2h)" }] }
+      ]
+    },
+    {
+      "card": "Q♣",
+      "title": "Assimilação Subterrânea",
+      "mutations": [
+        { "cost": "BA", "name": "Tatu-canastra", "desc": "Detecta movimentos num raio de 10m tocando o chão descalço, mesmo na escuridão.", "effects": [] },
+        { "cost": "AC", "name": "Coruja-buraqueira", "desc": "+1 Joaninha em Percepção para sons abafados/ecos; +1 Coruja em Reação contra ruídos altos.", "effects": [{ "when": "ins:Percepção", "type": "addA", "value": 1, "optional": true, "label": "+1 Joaninha (Sons abafados/ecos)" }, { "when": "ins:Reação", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Ruídos altos)" }] },
+        { "cost": "BC", "name": "Morcego-de-cauda-livre", "desc": "Múltiplos sons sobrepostos (multidões, máquinas) reduzem Sagacidade em 1 ponto.", "effects": [] }
+      ]
+    },
+    {
+      "card": "K♣",
+      "title": "Assimilação da Tundra",
+      "mutations": [
+        { "cost": "BA", "name": "Líquen-de-mapa", "desc": "Imune a frio intenso ou neve mesmo abaixo de -20°C; dorme ao relento sem exaustão térmica.", "effects": [] },
+        { "cost": "AC", "name": "Marmota-alpina", "desc": "Entra em torpor por até 12h estabilizando ferimentos; reduz Potência em 1 ao despertar.", "effects": [] },
+        { "cost": "BC", "name": "Husky siberiano", "desc": "Pelagem densa protege do frio, mas impõe +1 Coruja em Atletismo em ambientes quentes.", "effects": [{ "when": "skill:Atletismo", "type": "addC", "value": 1, "optional": true, "label": "+1 Coruja (Ambiente quente)" }] }
+      ]
+    }
   ]
 }

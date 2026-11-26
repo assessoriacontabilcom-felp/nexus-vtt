@@ -1,63 +1,266 @@
-export const CONSTANTS = {
-  INSTINTOS: ['Influência', 'Percepção', 'Potência', 'Reação', 'Resolução', 'Sagacidade'],
-  CONHECIMENTOS: ['Biologia', 'Erudição', 'Engenharia', 'Geografia', 'Medicina', 'Segurança'],
-  PRATICAS: ['Armas', 'Atletismo', 'Expressão', 'Furtividade', 'Manufaturas', 'Sobrevivência'],
-  SAUDE_NIVEIS: ['Saudável', 'Escoriação', 'Laceração', 'Ferimentos', 'Debilitação', 'Incapacitação'],
-  FACES: {
+// Tabelas fixas e mapeamento das faces dos dados customizados do sistema:
+// A = Joaninha (Sucesso) | B = Cervo (Adaptação) | C = Coruja (Pressão)
+export const SYSTEM_DATA = {
+  instincts: ['Influência', 'Percepção', 'Potência', 'Reação', 'Resolução', 'Sagacidade'],
+  knowledges: ['Biologia', 'Erudição', 'Engenharia', 'Geografia', 'Medicina', 'Segurança'],
+  practices: ['Armas', 'Atletismo', 'Expressão', 'Furtividade', 'Manufaturas', 'Sobrevivência'],
+  healthLevels: ['Saudável', 'Escoriação', 'Laceração', 'Ferimentos', 'Debilitação', 'Incapacitação'],
+  dieFaces: {
     6:  ['', '', 'C', 'C', 'BC', 'A'],
     10: ['', '', 'C', 'C', 'BC', 'A', 'AA', 'AB', 'ABC', 'AAC'],
     12: ['', '', 'C', 'C', 'BC', 'A', 'AA', 'AB', 'ABC', 'AAC', 'ABBC', 'CC']
   }
 };
 
-export const SYMBOLS_SVG = {
+export const SYMBOL_ICONS = {
   A: `<svg class="die-svg" viewBox="0 0 64 64" aria-label="Joaninha"><path d="M25 14l-5-7m19 7l5-7" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M17 24L7 19m10 14H4m14 10L8 51m39-27l10-5m-10 14h13m-14 10l10 8" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M23 19c0-5 18-5 18 0v3H23v-3z"/><path d="M16 36c0-11 7-15 16-15s16 4 16 15c0 12-7 19-16 19s-16-7-16-19zm14.5-10v24h3V26h-3zm-7.5 2a3 2.2 0 1 0 0 4.4 3 2.2 0 1 0 0-4.4zm18 0a3 2.2 0 1 0 0 4.4 3 2.2 0 1 0 0-4.4zm-17 12a3.5 3.5 0 1 0 0 7 3.5 3.5 0 1 0 0-7zm16 0a3.5 3.5 0 1 0 0 7 3.5 3.5 0 1 0 0-7z" fill-rule="evenodd"/></svg>`,
   B: `<svg class="die-svg" viewBox="0 0 64 64" aria-label="Cervo"><path d="M24 27c-8-4-14-12-13-21 3 5 7 8 11 9-1-4 0-8 2-11 1 5 3 9 5 12m11 11c8-4 14-12 13-21-3 5-7 8-11 9 1-4 0-8-2-11-1 5-3 9-5 12" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 28l-9-3 3 7 6 1zm20 0l9-3-3 7-6 1z"/><path d="M22 27h20l3 14-8 16H27l-8-16 3-14zm4 11l3 2-3 2-2-2zm12 0l-3 2 3 2 2-2zm-8 14h4l-2 3-2-3z" fill-rule="evenodd"/></svg>`,
   C: `<svg class="die-svg" viewBox="0 0 64 64" aria-label="Coruja"><path d="M12 11l11 7h18l11-7-2 15 6 5-6 5 4 9-9-1-5 9-7-5-7 5-5-9-9 1 4-9-6-5 6-5-2-15zm11 18c-4 0-7 3-7 6s3 5 7 5 6-2 6-5-2-6-6-6zm18 0c-4 0-6 3-6 6s2 5 6 5 7-2 7-5-3-6-7-6zm-9 11l-3 5h6l-3-5z" fill-rule="evenodd"/></svg>`,
   TREE: `<svg class="die-svg sm" viewBox="0 0 64 64" aria-label="Árvore"><path d="M32 6C18 6 10 16 12 26c-5 3-6 11 1 15h14v17h10V41h14c7-4 6-12 1-15 2-10-6-20-20-20z"/></svg>`
 };
 
-export const countSym = (str, char) => str.split(char).length - 1;
+const SYMBOL_LABELS = {
+  A: 'Sucesso (Joaninha)',
+  B: 'Adaptação (Cervo)',
+  C: 'Pressão (Coruja)'
+};
 
-export function getSymbolIcon(char, small = false) {
-  const titles = { A: 'Sucesso (Joaninha)', B: 'Adaptação (Cervo)', C: 'Pressão (Coruja)' };
-  const raw = SYMBOLS_SVG[char] || '';
-  const svg = small ? raw.replace('class="die-svg"', 'class="die-svg sm"') : raw;
-  return `<span class="sym-${char}" title="${titles[char] || ''}">${svg}</span>`;
+export function countSymbol(text, symbol) {
+  return text.split(symbol).length - 1;
 }
 
-export function formatSymbolsHTML(symStr, small = false) {
-  if (!symStr) return '<span class="sym-empty">vazio</span>';
-  return `<span class="sym-group">${symStr.split('').map(c => getSymbolIcon(c, small)).join('')}</span>`;
+export function getSymbolIcon(symbol, isSmall = false) {
+  const rawSvg = SYMBOL_ICONS[symbol] || '';
+  const svg = isSmall ? rawSvg.replace('class="die-svg"', 'class="die-svg sm"') : rawSvg;
+  return `<span class="sym-${symbol}" title="${SYMBOL_LABELS[symbol] || ''}">${svg}</span>`;
 }
 
-export function getDerivedStats(state) {
-  const nivelAssimilacao = 10 - state.nivelDeterminacao;
-  const pvPorNivel = 1 + state.instintos[2] + state.instintos[4];
+export function formatSymbolsHTML(symbolsText, isSmall = false) {
+  if (!symbolsText) return '<span class="sym-empty">vazio</span>';
+  const icons = symbolsText.split('').map(char => getSymbolIcon(char, isSmall)).join('');
+  return `<span class="sym-group">${icons}</span>`;
+}
+
+// Localiza todas as mutações equipadas na ficha cruzando com o catálogo JSON
+export function getEquippedMutations(character, assimilationCatalog = {}) {
+  const allMutations = Object.values(assimilationCatalog)
+    .flat()
+    .flatMap(card => card.mutations || []);
+
+  const assimilationLevel = 10 - character.determinationLevel;
+  const equipped = [];
+
+  (character.assimilations || []).forEach((block, slotIdx) => {
+    String(block || '')
+      .split('\n')
+      .map(line => line.trim())
+      .filter(Boolean)
+      .forEach((line, lineIdx) => {
+        // Extrai o nome antes do primeiro "(" ou ":" (ex: "Ligeiro (A): +1..." -> "Ligeiro")
+        const rawName = line.split('(')[0].split(':')[0].trim();
+        const catalogEntry = allMutations.find(
+          mut => mut.name.toLowerCase() === rawName.toLowerCase()
+        );
+
+        if (!catalogEntry) return;
+
+        // Valida requisito de Assimilação mínima no custo (ex: "Assim. 7+")
+        const reqMatch = String(catalogEntry.cost || '').match(/assim\.?\s*(\d+)\+/i);
+        if (reqMatch && assimilationLevel < Number(reqMatch[1])) return;
+
+        equipped.push({
+          id: `mut-${slotIdx}-${lineIdx}`,
+          name: catalogEntry.name,
+          cost: catalogEntry.cost,
+          desc: catalogEntry.desc,
+          effects: catalogEntry.effects || []
+        });
+      });
+  });
+
+  return equipped;
+}
+
+// Calcula limites máximos (5 ou 6), bônus/penalidades fixos e aptidões zeradas por mutações
+export function getAptitudeModifiers(character, assimilationCatalog = {}) {
+  const modifiers = {
+    instincts: { caps: [5, 5, 5, 5, 5, 5], bonuses: [0, 0, 0, 0, 0, 0], zeroed: Array(6).fill(false) },
+    knowledges: { caps: [5, 5, 5, 5, 5, 5], bonuses: [0, 0, 0, 0, 0, 0], zeroed: Array(6).fill(false) },
+    practices: { caps: [5, 5, 5, 5, 5, 5], bonuses: [0, 0, 0, 0, 0, 0], zeroed: Array(6).fill(false) }
+  };
+
+  const groupLabels = {
+    instincts: SYSTEM_DATA.instincts,
+    knowledges: SYSTEM_DATA.knowledges,
+    practices: SYSTEM_DATA.practices
+  };
+
+  getEquippedMutations(character, assimilationCatalog).forEach(mut => {
+    mut.effects.forEach(effect => {
+      if (effect.optional) return;
+      const labels = groupLabels[effect.group];
+      if (!labels) return;
+      const idx = labels.findIndex(name => name.toLowerCase() === effect.target?.toLowerCase());
+      if (idx === -1) return;
+
+      if (effect.type === 'aptitudeMod') {
+        modifiers[effect.group].bonuses[idx] += effect.value;
+        if (effect.canExceedMax) modifiers[effect.group].caps[idx] = 6;
+      } else if (effect.type === 'aptitudeZero') {
+        modifiers[effect.group].zeroed[idx] = true;
+      }
+    });
+  });
+
+  return modifiers;
+}
+
+// Retorna os valores efetivos (base + mutações) de Instintos, Conhecimentos e Práticas
+export function getEffectiveAptitudes(character, assimilationCatalog = {}) {
+  const mods = getAptitudeModifiers(character, assimilationCatalog);
+  const applyGroup = (groupName, minVal) =>
+    character[groupName].map((baseVal, idx) => {
+      if (mods[groupName].zeroed[idx]) return 0;
+      const total = Math.max(minVal, baseVal + mods[groupName].bonuses[idx]);
+      return Math.min(mods[groupName].caps[idx], total);
+    });
+
   return {
-    nivelAssimilacao,
-    pvPorNivel,
-    pvTotal: pvPorNivel * 6,
-    nivelAtualIdx: Math.floor(state.danoSofrido / pvPorNivel)
+    instincts: applyGroup('instincts', 1),
+    knowledges: applyGroup('knowledges', 0),
+    practices: applyGroup('practices', 0),
+    modifiers: mods
   };
 }
 
-export function computeFinalTotals(pending) {
-  const keptSymbols = [...pending.selected].map(i => pending.dice[i].symbols).join('');
-  let A = countSym(keptSymbols, 'A');
-  let B = countSym(keptSymbols, 'B');
-  let C = countSym(keptSymbols, 'C');
-  const fb = pending.flatBonus || {};
+// Extrai modificadores de Saúde vindos de mutações (ex: Vigoroso +1 PV/nível, Resistente, Falência)
+export function getHealthModifiers(character, assimilationCatalog = {}) {
+  const healthMods = {
+    extraHpPerLevel: 0,
+    ignoreTier4: false,
+    doublePenalty: false
+  };
 
-  const convB = Math.min(B, fb.bToA || 0);
-  B -= convB; A += convB;
+  getEquippedMutations(character, assimilationCatalog).forEach(mut => {
+    mut.effects.forEach(effect => {
+      if (effect.type !== 'healthMod') return;
+      if (effect.hpPerLevel) healthMods.extraHpPerLevel += effect.hpPerLevel;
+      if (effect.ignoreTier4) healthMods.ignoreTier4 = true;
+      if (effect.doublePenalty) healthMods.doublePenalty = true;
+    });
+  });
 
-  const convC = Math.min(C, fb.cToB || 0);
-  C -= convC; B += convC;
+  return healthMods;
+}
+
+// Calcula os status derivados da ficha (Cabo de Guerra e pontos de Saúde)
+export function calculateDerivedStats(character, assimilationCatalog = {}) {
+  const assimilationLevel = 10 - character.determinationLevel;
+  const { instincts: effectiveInstincts } = getEffectiveAptitudes(character, assimilationCatalog);
+  const healthMods = getHealthModifiers(character, assimilationCatalog);
+
+  const hpPerLevel = 1 + effectiveInstincts[2] + effectiveInstincts[4] + healthMods.extraHpPerLevel;
+  const maxHp = hpPerLevel * 6;
+  const currentHp = Math.max(0, maxHp - character.damageTaken);
+  const currentLevelIndex = Math.min(5, Math.floor(character.damageTaken / hpPerLevel));
 
   return {
-    A: A + (fb.A || 0),
-    B: B + (fb.B || 0),
-    C: Math.max(0, C - (fb.ignoreC || 0))
+    assimilationLevel,
+    hpPerLevel,
+    maxHp,
+    currentHp,
+    currentLevelIndex,
+    healthMods
+  };
+}
+
+// Retorna as penalidades mecânicas do nível de saúde atual para o rolador
+export function getHealthPenalty(character, assimilationCatalog = {}, ignorePenalties = false) {
+  const stats = calculateDerivedStats(character, assimilationCatalog);
+  if (ignorePenalties) {
+    return { ...stats, dicePenalty: 0, extraAssimilationCost: 0, warning: '' };
+  }
+
+  const multiplier = stats.healthMods.doublePenalty ? 2 : 1;
+
+  if (stats.currentHp <= 0 || stats.currentLevelIndex >= 5) {
+    const pen = 2 * multiplier;
+    return {
+      ...stats,
+      dicePenalty: pen,
+      extraAssimilationCost: 2,
+      warning: `Incapacitação (Nível 1): -${pen} dados e exige 2 Assimilação para agir.`
+    };
+  }
+  if (stats.currentLevelIndex === 4) {
+    const pen = 2 * multiplier;
+    return {
+      ...stats,
+      dicePenalty: pen,
+      extraAssimilationCost: 0,
+      warning: `Debilitação (Nível 2): -${pen} dados em todos os testes.`
+    };
+  }
+  if (stats.currentLevelIndex === 3) {
+    const pen = 1 * multiplier;
+    return {
+      ...stats,
+      dicePenalty: pen,
+      extraAssimilationCost: 0,
+      warning: `Ferimentos (Nível 3): -${pen} dado(s) em todos os testes.`
+    };
+  }
+
+  return {
+    ...stats,
+    dicePenalty: 0,
+    extraAssimilationCost: 0,
+    warning: ''
+  };
+}
+
+// Soma os símbolos apenas dos dados mantidos pelo jogador e aplica efeitos de Características/Mutações
+export function calculateRollTotals(pendingRoll) {
+  const keptDice = [...pendingRoll.selected].map(index => pendingRoll.dice[index]);
+  const keptFaces = keptDice.map(die => die.symbols).join('');
+
+  let successes = countSymbol(keptFaces, 'A');
+  let adaptations = countSymbol(keptFaces, 'B');
+  let pressures = countSymbol(keptFaces, 'C');
+  const modifiers = pendingRoll.modifiers || {};
+
+  // Efeitos por dado mantido (Ofuscação, Auxílio das Sombras, Discernimento)
+  if (modifiers.perKeptDieA) successes += keptDice.length * modifiers.perKeptDieA;
+  if (modifiers.perKeptDieB) adaptations += keptDice.length * modifiers.perKeptDieB;
+  if (modifiers.discernimentoB && keptDice.some(die => countSymbol(die.symbols, 'B') > 0)) {
+    adaptations += modifiers.discernimentoB;
+  }
+
+  // Conversões de símbolos ocorrem antes dos bônus fixos
+  const convertedAdaptations = Math.min(adaptations, modifiers.bToA || 0);
+  adaptations -= convertedAdaptations;
+  successes += convertedAdaptations;
+
+  const convertedPressures = Math.min(pressures, modifiers.cToB || 0);
+  pressures -= convertedPressures;
+  adaptations += convertedPressures;
+
+  successes += modifiers.A || 0;
+  adaptations += modifiers.B || 0;
+  pressures += modifiers.C || 0;
+
+  if (modifiers.doubleA) successes *= 2;
+  if (modifiers.halveA) successes = Math.floor(successes / 2);
+
+  // Descoordenação (9♠): se obtiver 2+ Joaninhas, 1 vira Coruja
+  if (modifiers.aToCIfTwo && successes >= 2) {
+    successes -= 1;
+    pressures += 1;
+  }
+
+  return {
+    A: Math.max(0, successes),
+    B: Math.max(0, adaptations),
+    C: Math.max(0, pressures - (modifiers.ignoreC || 0))
   };
 }

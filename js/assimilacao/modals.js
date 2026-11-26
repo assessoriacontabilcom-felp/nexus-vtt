@@ -1,29 +1,50 @@
-import { CONSTANTS, getSymbolIcon } from './rules.js';
+import { SYSTEM_DATA, getSymbolIcon } from './rules.js';
 
-function createBackdrop(innerHTML) {
+const EFFECT_LABELS = {
+  addA: '+1 Joaninha',
+  addB: '+1 Cervo',
+  bToA: '1 Cervo → 1 Joaninha',
+  ignoreC: 'Ignora 1 Coruja',
+  cToB: '1 Coruja → 1 Cervo',
+  extraDie: '+1 dado',
+  extraKeep: 'Mantém +1 dado'
+};
+
+// Cria o fundo escuro padrão dos modais e fecha ao clicar fora ou no botão Fechar
+function createModalBackdrop(contentHTML) {
   const backdrop = document.createElement('div');
   backdrop.className = 'modal-backdrop';
-  backdrop.innerHTML = `<div class="modal-box">${innerHTML}</div>`;
+  backdrop.innerHTML = `<div class="modal-box">${contentHTML}</div>`;
   document.body.appendChild(backdrop);
 
   const close = () => backdrop.remove();
-  backdrop.querySelector('#closeModal').onclick = close;
-  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) close(); });
+  backdrop.querySelector('#closeModal')?.addEventListener('click', close);
+  backdrop.addEventListener('click', (event) => {
+    if (event.target === backdrop) close();
+  });
+
   return { backdrop, close };
 }
 
-function formatCostIcons(costStr) {
-  if (!costStr) return '';
-  return costStr.replace(/\b([ABC]+)\b/g, (match) =>
-    `<span style="display:inline-flex; align-items:center; gap:2px; vertical-align:middle;">${match
-      .split('')
-      .map(c => getSymbolIcon(c, true))
-      .join('')}</span>`
-  );
+// Substitui sequências isoladas de A, B e C nos custos das mutações pelos ícones SVG
+function renderCostIcons(costText) {
+  if (!costText) return '';
+  return costText.replace(/\b([ABC]+)\b/g, (symbols) => {
+    const icons = symbols.split('').map(char => getSymbolIcon(char, true)).join('');
+    return `<span style="display:inline-flex; align-items:center; gap:2px; vertical-align:middle;">${icons}</span>`;
+  });
 }
 
-export function openTraitModal(module, slotIndex) {
-  const { backdrop, close } = createBackdrop(`
+// Modal de Características: busca no catálogo oficial + criação de característica customizada
+export function openTraitModal(sheetModule, slotIndex) {
+  const instinctOptions = SYSTEM_DATA.instincts
+    .map(name => `<option value="ins:${name}">Instinto: ${name}</option>`)
+    .join('');
+  const skillOptions = [...SYSTEM_DATA.knowledges, ...SYSTEM_DATA.practices]
+    .map(name => `<option value="skill:${name}">Perícia: ${name}</option>`)
+    .join('');
+
+  const { backdrop, close } = createModalBackdrop(`
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--paper-line); padding-bottom:8px; margin-bottom:10px;">
       <h3 style="font-family:var(--font-display); color:var(--col-instinto); font-size:1rem;">Características (Slot ${slotIndex + 1})</h3>
       <button type="button" class="btn btn-ghost btn-sm" id="closeModal">Fechar</button>
@@ -38,8 +59,8 @@ export function openTraitModal(module, slotIndex) {
         <select id="newTraitWhen" style="background:#fff; color:var(--ink-dark); padding:4px; border:1px solid var(--paper-line); border-radius:4px;">
           <option value="">Sem bônus automático</option>
           <option value="always">Em qualquer teste</option>
-          <optgroup label="Instintos">${CONSTANTS.INSTINTOS.map(i => `<option value="ins:${i}">Instinto: ${i}</option>`).join('')}</optgroup>
-          <optgroup label="Perícias">${[...CONSTANTS.CONHECIMENTOS, ...CONSTANTS.PRATICAS].map(s => `<option value="skill:${s}">Perícia: ${s}</option>`).join('')}</optgroup>
+          <optgroup label="Instintos">${instinctOptions}</optgroup>
+          <optgroup label="Perícias">${skillOptions}</optgroup>
         </select>
         <select id="newTraitType" style="background:#fff; color:var(--ink-dark); padding:4px; border:1px solid var(--paper-line); border-radius:4px;">
           <option value="addA">+1 Sucesso (Joaninha)</option>
@@ -58,62 +79,73 @@ export function openTraitModal(module, slotIndex) {
   const listEl = backdrop.querySelector('#traitCatalogList');
   const searchEl = backdrop.querySelector('#traitSearchInp');
 
-  const renderList = (filter = '') => {
-    const q = filter.toLowerCase().trim();
-    const filtered = module.getAllTraits().filter(t =>
-      t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || (t.req && t.req.toLowerCase().includes(q))
+  const renderTraits = (query = '') => {
+    const term = query.toLowerCase().trim();
+    const matches = sheetModule.getAllTraits().filter(trait =>
+      trait.name.toLowerCase().includes(term) ||
+      trait.desc.toLowerCase().includes(term) ||
+      (trait.req && trait.req.toLowerCase().includes(term))
     );
 
-    listEl.innerHTML = filtered.length
-      ? filtered.map((t, i) => `
-          <button type="button" class="catalog-item" data-idx="${i}">
-            <strong>${t.name} ${t.cost ? `(${t.cost} XP)` : ''} ${t.effect ? '⚡' : ''}</strong>
-            ${t.req ? `<div style="font-size:0.74rem; color:var(--col-pericia); font-weight:600;">Req: ${t.req}</div>` : ''}
-            <span>${t.desc}</span>
-          </button>
-        `).join('')
-      : '<div class="muted">Nenhuma característica encontrada.</div>';
+    if (!matches.length) {
+      listEl.innerHTML = '<div class="muted">Nenhuma característica encontrada.</div>';
+      return;
+    }
 
-    listEl.querySelectorAll('.catalog-item').forEach((btn, idx) => {
-      btn.onclick = () => {
-        const chosen = filtered[idx];
-        module.state.caracteristicas[slotIndex] = { name: chosen.name, desc: chosen.desc, effect: chosen.effect || null };
-        module.saveState();
+    listEl.innerHTML = matches.map((trait, index) => `
+      <button type="button" class="catalog-item" data-idx="${index}">
+        <strong>${trait.name} ${trait.cost ? `(${trait.cost} XP)` : ''} ${trait.effect ? '⚡' : ''}</strong>
+        ${trait.req ? `<div style="font-size:0.74rem; color:var(--col-pericia); font-weight:600;">Req: ${trait.req}</div>` : ''}
+        <span>${trait.desc}</span>
+      </button>
+    `).join('');
+
+    listEl.querySelectorAll('.catalog-item').forEach((button, index) => {
+      button.addEventListener('click', () => {
+        const selected = matches[index];
+        sheetModule.state.traits[slotIndex] = {
+          name: selected.name,
+          desc: selected.desc,
+          effect: selected.effect || null
+        };
+        sheetModule.saveState();
         close();
-        module.renderActiveSheetPage();
-        module.refreshApplicableTraits();
-      };
+        sheetModule.renderActiveSheetPage();
+        sheetModule.refreshApplicableTraits();
+      });
     });
   };
 
-  renderList();
-  searchEl.addEventListener('input', () => renderList(searchEl.value));
+  renderTraits();
+  searchEl.addEventListener('input', () => renderTraits(searchEl.value));
   searchEl.focus();
 
-  backdrop.querySelector('#btnSaveNewTrait').onclick = () => {
+  backdrop.querySelector('#btnSaveNewTrait')?.addEventListener('click', () => {
     const name = backdrop.querySelector('#newTraitName').value.trim();
     const desc = backdrop.querySelector('#newTraitDesc').value.trim();
     const when = backdrop.querySelector('#newTraitWhen').value;
     const type = backdrop.querySelector('#newTraitType').value;
     if (!name) return;
 
-    const labels = { addA: '+1 Joaninha', addB: '+1 Cervo', bToA: '1 Cervo → 1 Joaninha', ignoreC: 'Ignora 1 Coruja', cToB: '1 Coruja → 1 Cervo', extraDie: '+1 dado', extraKeep: 'Mantém +1 dado' };
-    const effect = when ? { when, type, value: 1, label: `${labels[type]} (${when.replace(/^.*:/, '')})` } : null;
+    const cleanTarget = when.replace(/^.*:/, '');
+    const effect = when ? { when, type, value: 1, label: `${EFFECT_LABELS[type]} (${cleanTarget})` } : null;
+    const createdTrait = { name, desc, effect };
 
-    const newObj = { name, desc, effect };
-    module.customTraits.unshift(newObj);
-    module.saveCustomTraits();
-    module.state.caracteristicas[slotIndex] = newObj;
-    module.saveState();
+    sheetModule.customTraits.unshift(createdTrait);
+    sheetModule.saveCustomTraits();
+    sheetModule.state.traits[slotIndex] = createdTrait;
+    sheetModule.saveState();
+
     close();
-    module.renderActiveSheetPage();
-    module.refreshApplicableTraits();
-  };
+    sheetModule.renderActiveSheetPage();
+    sheetModule.refreshApplicableTraits();
+  });
 }
 
-export function openAssimilationModal(module, slotIdx, categoryKey) {
-  const list = module.catalogs.assimilacoes[categoryKey] || [];
-  const { backdrop, close } = createBackdrop(`
+// Modal das 52 cartas de Assimilação filtradas por naipe (evolutivas, adaptativas, inoportunas, singulares)
+export function openAssimilationModal(sheetModule, slotIndex, categoryKey) {
+  const cards = sheetModule.catalogs.assimilacoes[categoryKey] || [];
+  const { backdrop, close } = createModalBackdrop(`
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--paper-line); padding-bottom:8px; margin-bottom:10px;">
       <h3 style="font-family:var(--font-display); color:var(--col-ass); font-size:1rem;">Assimilações (${categoryKey.toUpperCase()})</h3>
       <button type="button" class="btn btn-ghost btn-sm" id="closeModal">Fechar</button>
@@ -125,53 +157,62 @@ export function openAssimilationModal(module, slotIdx, categoryKey) {
   const listEl = backdrop.querySelector('#assimCatalogList');
   const searchEl = backdrop.querySelector('#assimSearchInp');
 
-  const renderList = (filter = '') => {
-    const q = filter.toLowerCase().trim();
-    const filtered = list.filter(card =>
-      card.title.toLowerCase().includes(q) ||
-      card.card.toLowerCase().includes(q) ||
-      (card.mutations || []).some(m => m.name.toLowerCase().includes(q) || (m.desc && m.desc.toLowerCase().includes(q)))
+  const renderCards = (query = '') => {
+    const term = query.toLowerCase().trim();
+    const matches = cards.filter(card =>
+      card.title.toLowerCase().includes(term) ||
+      card.card.toLowerCase().includes(term) ||
+      (card.mutations || []).some(mut =>
+        mut.name.toLowerCase().includes(term) || (mut.desc && mut.desc.toLowerCase().includes(term))
+      )
     );
 
-    listEl.innerHTML = filtered.length
-      ? filtered.map(card => `
-          <div class="catalog-item" style="border-left-color:var(--col-ass); cursor:default;">
-            <strong style="color:var(--col-ass); font-size:1rem; margin-bottom:4px;">${card.card} — ${card.title}</strong>
-            ${(card.mutations || []).map(m => `
-              <div style="margin-top:6px; padding-top:6px; border-top:1px dashed var(--paper-line); display:flex; justify-content:space-between; align-items:center; gap:10px;">
-                <div>
-                  <div style="font-weight:700; color:var(--col-instinto); display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                    ${formatCostIcons(m.cost)}
-                    <span>— ${m.name}:</span>
-                  </div>
-                  <span style="display:block; margin-top:2px;">${m.desc || ''}</span>
-                </div>
-                <button type="button" class="btn btn-ghost btn-sm btn-add-mut" style="flex-shrink:0;" data-text="${m.name} (${m.cost}): ${m.desc || card.title}">+ Adicionar</button>
-              </div>
-            `).join('')}
-          </div>
-        `).join('')
-      : '<div class="muted">Nenhuma mutação encontrada.</div>';
+    if (!matches.length) {
+      listEl.innerHTML = '<div class="muted">Nenhuma mutação encontrada.</div>';
+      return;
+    }
 
-    listEl.querySelectorAll('.btn-add-mut').forEach(btn => {
-      btn.onclick = () => {
-        const cur = module.state.assimilacoes[slotIdx];
-        module.state.assimilacoes[slotIdx] = cur ? `${cur}\n${btn.dataset.text}` : btn.dataset.text;
-        module.saveState();
+    listEl.innerHTML = matches.map(card => `
+      <div class="catalog-item" style="border-left-color:var(--col-ass); cursor:default;">
+        <strong style="color:var(--col-ass); font-size:1rem; margin-bottom:4px;">${card.card} — ${card.title}</strong>
+        ${(card.mutations || []).map(mut => `
+          <div style="margin-top:6px; padding-top:6px; border-top:1px dashed var(--paper-line); display:flex; justify-content:space-between; align-items:center; gap:10px;">
+            <div>
+              <div style="font-weight:700; color:var(--col-instinto); display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                ${renderCostIcons(mut.cost)}
+                <span>— ${mut.name}:</span>
+              </div>
+              <span style="display:block; margin-top:2px;">${mut.desc || ''}</span>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm btn-add-mut" style="flex-shrink:0;" data-text="${mut.name} (${mut.cost}):${mut.desc || card.title}">+ Adicionar</button>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+
+    listEl.querySelectorAll('.btn-add-mut').forEach(button => {
+      button.addEventListener('click', () => {
+        const current = sheetModule.state.assimilations[slotIndex];
+        sheetModule.state.assimilations[slotIndex] = current
+          ? `${current}\n${button.dataset.text}`
+          : button.dataset.text;
+        sheetModule.saveState();
         close();
-        module.renderActiveSheetPage();
-      };
+        sheetModule.renderActiveSheetPage();
+        sheetModule.refreshApplicableTraits();
+      });
     });
   };
 
-  renderList();
-  searchEl.addEventListener('input', () => renderList(searchEl.value));
+  renderCards();
+  searchEl.addEventListener('input', () => renderCards(searchEl.value));
   searchEl.focus();
 }
 
-export function openItemsModal(module) {
-  const { pacotesIniciais = [], equipamentos = [], artefatos = [] } = module.catalogs.itens;
-  const { backdrop, close } = createBackdrop(`
+// Modal de Pacotes Iniciais, Artefatos e Equipamentos Comuns
+export function openItemsModal(sheetModule) {
+  const { pacotesIniciais = [], equipamentos = [], artefatos = [] } = sheetModule.catalogs.itens;
+  const { backdrop, close } = createModalBackdrop(`
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--paper-line); padding-bottom:8px; margin-bottom:10px;">
       <h3 style="font-family:var(--font-display); color:var(--col-pericia); font-size:1rem;">Equipamentos, Pacotes & Artefatos</h3>
       <button type="button" class="btn btn-ghost btn-sm" id="closeModal">Fechar</button>
@@ -183,35 +224,43 @@ export function openItemsModal(module) {
   const listEl = backdrop.querySelector('#itemCatalogList');
   const searchEl = backdrop.querySelector('#itemSearchInp');
 
-  const renderList = (filter = '') => {
-    const q = filter.toLowerCase().trim();
-    const fPacotes = pacotesIniciais.filter(p => p.name.toLowerCase().includes(q) || p.items.join(', ').toLowerCase().includes(q));
-    const fArtefatos = artefatos.filter(a => a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q));
-    const fEquip = equipamentos.filter(e => e.name.toLowerCase().includes(q) || e.desc.toLowerCase().includes(q));
+  const renderItems = (query = '') => {
+    const term = query.toLowerCase().trim();
+    const packs = pacotesIniciais.filter(pack =>
+      pack.name.toLowerCase().includes(term) || pack.items.join(', ').toLowerCase().includes(term)
+    );
+    const artifacts = artefatos.filter(art =>
+      art.name.toLowerCase().includes(term) || art.desc.toLowerCase().includes(term)
+    );
+    const gear = equipamentos.filter(item =>
+      item.name.toLowerCase().includes(term) || item.desc.toLowerCase().includes(term)
+    );
 
     listEl.innerHTML = `
-      ${fPacotes.length ? `<strong style="color:var(--col-instinto); font-size:0.85rem;">PACOTES INICIAIS</strong>` : ''}
-      ${fPacotes.map(p => `<button type="button" class="catalog-item btn-add-item" data-item="${p.name}: ${p.items.join(', ')}"><strong>${p.name}</strong><span>${p.items.join(', ')}</span></button>`).join('')}
+      ${packs.length ? '<strong style="color:var(--col-instinto); font-size:0.85rem;">PACOTES INICIAIS</strong>' : ''}
+      ${packs.map(pack => `<button type="button" class="catalog-item btn-add-item" data-item="${pack.name}:${pack.items.join(', ')}"><strong>${pack.name}</strong><span>${pack.items.join(', ')}</span></button>`).join('')}
 
-      ${fArtefatos.length ? `<strong style="color:var(--col-ass); font-size:0.85rem; margin-top:8px;">ARTEFATOS</strong>` : ''}
-      ${fArtefatos.map(a => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-ass);" data-item="${a.name} (Escassez ${a.scarcity}) — ${a.desc}"><strong style="color:var(--col-ass);">${a.name} (Escassez ${a.scarcity} · ${a.slots} espaço)</strong><span>${a.desc}</span></button>`).join('')}
+      ${artifacts.length ? '<strong style="color:var(--col-ass); font-size:0.85rem; margin-top:8px;">ARTEFATOS</strong>' : ''}
+      ${artifacts.map(art => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-ass);" data-item="${art.name} (Escassez ${art.scarcity}) —${art.desc}"><strong style="color:var(--col-ass);">${art.name} (Escassez${art.scarcity} · ${art.slots} espaço)</strong><span>${art.desc}</span></button>`).join('')}
 
-      ${fEquip.length ? `<strong style="color:var(--col-pericia); font-size:0.85rem; margin-top:8px;">EQUIPAMENTOS COMUNS</strong>` : ''}
-      ${fEquip.map(eq => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-pericia);" data-item="${eq.name} (Escassez ${eq.scarcity})"><strong style="color:var(--col-pericia);">${eq.name} (Escassez ${eq.scarcity})</strong><span>${eq.desc}</span></button>`).join('')}
+      ${gear.length ? '<strong style="color:var(--col-pericia); font-size:0.85rem; margin-top:8px;">EQUIPAMENTOS COMUNS</strong>' : ''}
+      ${gear.map(item => `<button type="button" class="catalog-item btn-add-item" style="border-left-color:var(--col-pericia);" data-item="${item.name} (Escassez${item.scarcity})"><strong style="color:var(--col-pericia);">${item.name} (Escassez ${item.scarcity})</strong><span>${item.desc}</span></button>`).join('')}
     `;
 
-    listEl.querySelectorAll('.btn-add-item').forEach(btn => {
-      btn.onclick = () => {
-        const cur = module.state.inventarioTexto;
-        module.state.inventarioTexto = cur ? `${cur}\n• ${btn.dataset.item}` : `• ${btn.dataset.item}`;
-        module.saveState();
+    listEl.querySelectorAll('.btn-add-item').forEach(button => {
+      button.addEventListener('click', () => {
+        const current = sheetModule.state.inventoryText;
+        sheetModule.state.inventoryText = current
+          ? `${current}\n• ${button.dataset.item}`
+          : `• ${button.dataset.item}`;
+        sheetModule.saveState();
         close();
-        module.renderActiveSheetPage();
-      };
+        sheetModule.renderActiveSheetPage();
+      });
     });
   };
 
-  renderList();
-  searchEl.addEventListener('input', () => renderList(searchEl.value));
+  renderItems();
+  searchEl.addEventListener('input', () => renderItems(searchEl.value));
   searchEl.focus();
 }
